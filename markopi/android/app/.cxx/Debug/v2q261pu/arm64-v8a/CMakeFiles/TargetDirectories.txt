@@ -1,0 +1,2 @@
+D:/vscode/flutter_x_laravel/PA_DUA/markopiApp/markopi/android/app/.cxx/Debug/v2q261pu/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/vscode/flutter_x_laravel/PA_DUA/markopiApp/markopi/android/app/.cxx/Debug/v2q261pu/arm64-v8a/CMakeFiles/rebuild_cache.dir

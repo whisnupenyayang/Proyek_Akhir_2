@@ -1,0 +1,2 @@
+D:/vscode/android/Fluter/PA_DUA/markopiApp/markopi/android/app/.cxx/Debug/1st351of/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/vscode/android/Fluter/PA_DUA/markopiApp/markopi/android/app/.cxx/Debug/1st351of/armeabi-v7a/CMakeFiles/rebuild_cache.dir
