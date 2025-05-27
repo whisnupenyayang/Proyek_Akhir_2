@@ -36,6 +36,27 @@ class _ForumKomentarState extends State<ForumKomentar> {
     }
   }
 
+  void _showFullScreenImage(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.all(10),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: InteractiveViewer(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (id == null) {
@@ -89,10 +110,18 @@ class _ForumKomentarState extends State<ForumKomentar> {
                     children: [
                       Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.black,
-                            radius: 20,
-                            // Bisa pakai foto profil: backgroundImage: NetworkImage(forum.user.avatarUrl)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white, // warna latar putih
+                              shape: BoxShape.circle, // bentuk lingkaran
+                            ),
+                            padding: const EdgeInsets.all(
+                                8), // jarak antara icon dan tepi lingkaran, bisa disesuaikan
+                            child: Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.grey[700],
+                            ),
                           ),
                           SizedBox(width: 10),
                           Text(
@@ -112,12 +141,24 @@ class _ForumKomentarState extends State<ForumKomentar> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             forum.imageUrls.isNotEmpty
-                                ? Image.network(
-                                    Connection.buildImageUrl(
-                                        "storage/${forum.imageUrls.first}"),
-                                    height: 80,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
+                                ? GestureDetector(
+                                    onTap: () {
+                                      _showFullScreenImage(
+                                        Connection.buildImageUrl(
+                                            "storage/${forum.imageUrls.first}"),
+                                      );
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10)),
+                                      child: Image.network(
+                                        Connection.buildImageUrl(
+                                            "storage/${forum.imageUrls.first}"),
+                                        height: 80,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   )
                                 : Container(
                                     height: 80,
@@ -246,10 +287,18 @@ class _ForumKomentarState extends State<ForumKomentar> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.lightBlue.shade100,
-                          radius: 23,
-                          // Bisa pakai foto profil jika ada
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white, // warna latar putih
+                            shape: BoxShape.circle, // bentuk lingkaran
+                          ),
+                          padding: const EdgeInsets.all(
+                              8), // jarak antara icon dan tepi lingkaran, bisa disesuaikan
+                          child: Icon(
+                            Icons.person,
+                            size: 40,
+                            color: Colors.grey[700],
+                          ),
                         ),
                         SizedBox(width: 16),
                         Expanded(

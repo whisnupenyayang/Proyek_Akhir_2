@@ -21,7 +21,7 @@ class MyBottomNavigationBar extends StatelessWidget {
         // Ganti tampilan berdasarkan index yang dipilih
         switch (controller.selectedIndex.value) {
           case 0:
-            return Beranda();
+            return Beranda();  // Pastikan Beranda tampil sebagai default
           case 1:
             return ListForum();
           case 2:
@@ -31,7 +31,7 @@ class MyBottomNavigationBar extends StatelessWidget {
           case 4:
             return ProfileView();
           default:
-            return Beranda();
+            return Beranda();  // Pastikan fallback ke Beranda
         }
       }),
       bottomNavigationBar: Obx(
@@ -82,3 +82,4 @@ class MyBottomNavigationBar extends StatelessWidget {
     );
   }
 }
+

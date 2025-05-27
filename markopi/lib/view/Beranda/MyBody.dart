@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:markopi/controllers/Artikel_Controller.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart'; // Import pengepul controller
+import 'package:markopi/service/Role_storage.dart';
 import 'package:markopi/service/token_storage.dart';
 import './MainMenu.dart';
 import 'package:markopi/models/Artikel_Model.dart';
@@ -17,15 +18,29 @@ class BerandaBody extends StatefulWidget {
 
 class _BerandaBodyState extends State<BerandaBody> {
   final ArtikelController artikelC = Get.put(ArtikelController());
-  final PengepulController pengepulC = Get.put(PengepulController()); // Instance pengepul controller
+  final PengepulController pengepulC =
+      Get.put(PengepulController()); // Instance pengepul controller
+
   bool isLoading = true;
   String? token;
+  String? role;
 
   @override
   void initState() {
     super.initState();
+    print('test');
+    _loadRole();
+
     artikelC.fetchArtikel();
-    pengepulC.fetchPengepul(); // Fetch pengepul data
+    pengepulC.fetchPengepul();
+  }
+
+  void _loadRole() async {
+    String? storedRole = await RoleStorage.getRole();
+    setState(() {
+      role = storedRole;
+      print(role);
+    });
   }
 
   @override
