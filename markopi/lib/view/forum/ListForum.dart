@@ -119,10 +119,20 @@ class ListForum extends StatelessWidget {
                                       // Header: Nama pengguna dan tanggal
                                       Row(
                                         children: [
-                                          const CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                'assets/images/iklan1.png'), // Ganti dengan avatar sesuai data user jika ada
-                                            radius: 14,
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors
+                                                  .white, // warna latar putih
+                                              shape: BoxShape
+                                                  .circle, // bentuk lingkaran
+                                            ),
+                                            padding: const EdgeInsets.all(
+                                                8), // jarak antara icon dan tepi lingkaran, bisa disesuaikan
+                                            child: Icon(
+                                              Icons.person,
+                                              size: 40,
+                                              color: Colors.grey[700],
+                                            ),
                                           ),
                                           const SizedBox(width: 8),
                                           Column(
@@ -152,25 +162,28 @@ class ListForum extends StatelessWidget {
                                           ? ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8),
-                                                child: forum.imageUrls.first.isNotEmpty
+                                              child: forum.imageUrls.first
+                                                      .isNotEmpty
                                                   ? Image.network(
-                                                    Connection.buildImageUrl(
-                                                      "storage/${forum.imageUrls.first}"),
-                                                    height: 160,
-                                                    width: double.infinity,
-                                                    fit: BoxFit.cover,
-                                                  )
+                                                      Connection.buildImageUrl(
+                                                          "storage/${forum.imageUrls.first}"),
+                                                      height: 160,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                    )
                                                   : Container(
-                                                    height: 160,
-                                                    width: double.infinity,
-                                                    color: Colors.grey[300],
-                                                    alignment: Alignment.center,
-                                                    child: const Icon(
-                                                    Icons.image_not_supported,
-                                                    size: 48,
-                                                    color: Colors.grey,
+                                                      height: 160,
+                                                      width: double.infinity,
+                                                      color: Colors.grey[300],
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Icon(
+                                                        Icons
+                                                            .image_not_supported,
+                                                        size: 48,
+                                                        color: Colors.grey,
+                                                      ),
                                                     ),
-                                                  ),
                                             )
                                           : SizedBox.shrink(),
                                       const SizedBox(height: 12),

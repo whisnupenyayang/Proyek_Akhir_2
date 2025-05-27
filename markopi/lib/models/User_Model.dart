@@ -25,7 +25,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id_users'] ?? 0,
+      id: json['id_users']??0,
       namaLengkap: json['nama_lengkap'] ?? '',
       username: json['username'] ?? '',
       email: json['email'],
@@ -36,5 +36,10 @@ class User {
       noTelp: json['no_telp'],
       role: json['role'],
     );
+  }
+
+    @override
+  String toString() {
+    return 'User{id: $id, namaLengkap: $namaLengkap, username: $username, email: $email, tanggalLahir: $tanggalLahir, jenisKelamin: $jenisKelamin, provinsi: $provinsi, kabupaten: $kabupaten, noTelp: $noTelp, role: $role}';
   }
 }

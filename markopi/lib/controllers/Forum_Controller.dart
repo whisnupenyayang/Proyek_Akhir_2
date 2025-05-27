@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:markopi/models/Forum_Model.dart';
 import 'package:markopi/models/Komentar_Forum_Model.dart';
 import 'package:markopi/providers/Forum_Provider.dart';
+import 'package:markopi/routes/route_name.dart';
 import 'package:markopi/service/token_storage.dart';
 import 'package:flutter/foundation.dart';
 
@@ -194,6 +195,7 @@ class ForumController extends GetxController {
      
      if (response.statusCode == 200) {
        Get.snackbar("Berhasil", "Pertanyaan Berhasil Di Publish");
+      //  Get.offAllNamed(RouteName.forum);
      } else {
        Get.snackbar('Error', 'Gagal menambah forum');
      }

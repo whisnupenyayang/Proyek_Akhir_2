@@ -72,7 +72,7 @@ class AuthController extends Controller
         ]);
         $user = User::where('username', $request->username)->first();
         $userData = $user->toArray();
-        unset($userData['username'], $userData['id_users']);
+        unset( $userData['id_users']);
 
         if ($user->role != 'admin' && $user->status == 0) {
             if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
@@ -92,13 +92,7 @@ class AuthController extends Controller
                     'data' => null
                 ]);
             }
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Akun Anda tidak aktif',
-                'data' => null
-            ]);
-        }
+        } 
 
     }
 

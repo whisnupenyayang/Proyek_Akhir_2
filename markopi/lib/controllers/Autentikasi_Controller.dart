@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:markopi/models/User_Model.dart';
 import 'package:markopi/models/register_request.dart';
 import 'package:markopi/providers/Autentikasi_Providers.dart';
 import 'package:markopi/routes/route_name.dart';
+import 'package:markopi/service/Role_storage.dart';
 import 'package:markopi/service/User_Storage.dart';
 import 'package:markopi/service/User_Storage_Service.dart';
 import 'package:markopi/service/token_storage.dart';
@@ -26,14 +28,13 @@ class AutentikasiController extends GetxController {
 
       if (body['success'] == true) {
         await TokenStorage.saveToken(body['token']);
-
-        // print(body['user']);
+        final User u = User.fromJson(body['user']);
+        final String? role = u.role;
+        await RoleStorage.saveRole(u.role!);
         sukses.value = true;
-
         final UserModel user = UserModel.fromJson(body['user']);
         await userService.openBox();
         await userService.saveUser(user);
-
         Get.offAllNamed(RouteName.beranda);
       } else {
         Get.snackbar('Error', body['message'] ?? 'Login gagal');
