@@ -14,7 +14,6 @@ import 'package:markopi/view/HargaKopi/PengepulDetail.dart';
 import 'package:markopi/view/Login/login.dart';
 import 'package:markopi/view/Profile/Profile.dart';
 import 'package:markopi/view/DataPengepulUser/UserPengepu.dart';
-import 'package:markopi/view/component/MyBottomNavigation.dart';
 import 'package:markopi/view/forum/ForumKomentar.dart';
 import 'package:markopi/view/forum/ListForum.dart';
 import 'package:markopi/view/Laporan/LaporanPage.dart';
@@ -32,9 +31,9 @@ import 'package:markopi/view/ForgotPassword/reset_password.dart';
 class AppPages {
   static final pages = [
     // Halaman utama
-      GetPage(
+    GetPage(
       name: RouteName.beranda,
-      page: () => const MyBottomNavigationBar(),
+      page: () => Beranda(),
     ),
 
     /*================Forum=================== */

@@ -115,12 +115,12 @@ class _ForumKomentarState extends State<ForumKomentar> {
                                 ? Image.network(
                                     Connection.buildImageUrl(
                                         "storage/${forum.imageUrls.first}"),
-                                    height: 200,
+                                    height: 80,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                   )
                                 : Container(
-                                    height: 165,
+                                    height: 80,
                                     width: double.infinity,
                                     color: Colors.black12,
                                   ),
@@ -254,16 +254,46 @@ class _ForumKomentarState extends State<ForumKomentar> {
                         SizedBox(width: 16),
                         Expanded(
                           child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.blueGrey.shade50,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              komentar.komentar.trim(),
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        komentar.userNamaLengkap,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                      Text(
+                                        " - ",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                      Text(
+                                        komentar.userRole,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w900),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    komentar.komentar.trim(),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              )),
                         ),
                       ],
                     ),

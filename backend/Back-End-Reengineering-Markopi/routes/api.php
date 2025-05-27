@@ -10,7 +10,7 @@ use App\Http\API\BudidayaAPIController;
 use App\Http\API\ReplyKomentarController;
 use App\Http\API\ResetPasswordController;
 use App\Http\API\ForgotPasswordController;
-use App\Http\Api\IklanApiController;
+use App\Http\API\IklanApiController;
 use App\Http\API\PengepulApiController;
 use App\Http\API\ResepApiController;
 use App\Http\API\TokoApiController;

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Autentikasi_Controller.dart';
+import 'package:markopi/controllers/pengajuan.dart';
 import 'package:markopi/routes/route_name.dart';
 import 'package:markopi/service/User_Storage.dart';
 import 'package:markopi/service/User_Storage_Service.dart';
+import 'package:markopi/view/Pengajuan/pengajuan.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -14,6 +16,7 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   var autentikasiC = Get.put(AutentikasiController());
+  PengajuanController _pengajuanController = Get.put(PengajuanController());
   final userStorage = UserStorage();
   UserModel? _user;
 
@@ -58,6 +61,93 @@ class _ProfileViewState extends State<ProfileView> {
               ),
             ),
 
+            FutureBuilder(
+              future: _pengajuanController.checkPengajuanStatus(),
+              builder: (context, snapshot) {
+                return Obx(() {
+                  final status = _pengajuanController.status.value;
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      width: 209,
+                      height: 40,
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else if (status == 0) {
+                    return Container(
+                      width: 209,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.amber.shade500,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Menunggu Persetujuan',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (status == 1) {
+                    return Container(
+                      width: 209,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade500,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Pengajuan Diterima',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (status == 2) {
+                    return Container(
+                      width: 209,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade500,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Pengajuan Ditolak',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Belum pernah mengajukan
+                    return ElevatedButton(
+                      onPressed: () => Get.to(PengajuanPage()),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        foregroundColor: Colors.white,
+                        minimumSize: Size(209, 40),
+                      ),
+                      child: Text('Ajukan Pengepul/Fasilitator'),
+                    );
+                  }
+                });
+              },
+            ),
             // Data profil lain tetap sama
             Container(
               width: double.infinity,
@@ -232,9 +322,9 @@ class _ProfileViewState extends State<ProfileView> {
             GestureDetector(
               onTap: () async {
                 await autentikasiC.logout();
-                
-                  // Get.offAllNamed(RouteName.beranda);
-                
+                if (autentikasiC.sukses.value) {
+                  Get.offAllNamed(RouteName.login);
+                }
               },
               child: Container(
                 width: 209,

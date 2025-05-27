@@ -43,27 +43,21 @@ class AutentikasiController extends GetxController {
     }
   }
 
- Future<void> logout() async {
-  final String? token = await TokenStorage.getToken();
-  final box = await userStorage.openBox();
-  if (token == null) {
-    Get.snackbar("Gagal", "Anda belum login");
-    return;
+  Future<void> logout() async {
+    final String? token = await TokenStorage.getToken();
+    final box = await userStorage.openBox();
+    if (token == null) {
+      Get.snackbar("gagal", "Anda Belum Login");
+      return;
+    }
+    final response = await autentikasiProvider.logout(token);
+
+    if (response.statusCode == 200) {
+      await userStorage.deleteUser();
+      await TokenStorage.clearToken();
+      sukses.value = true;
+    }
   }
-  final response = await autentikasiProvider.logout(token);
-
-  if (response.statusCode == 200) {
-    await userStorage.deleteUser();
-    await TokenStorage.clearToken();
-    sukses.value = true;
-
-    // Tambahkan navigasi di sini
-    Get.offAllNamed(RouteName.beranda);
-  } else {
-    Get.snackbar("Gagal", "Logout gagal dari server");
-  }
-}
-
 
   Future<void> register(RegisterRequest request) async {
     final response = await autentikasiProvider.register(request);

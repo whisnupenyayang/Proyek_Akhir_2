@@ -152,13 +152,25 @@ class ListForum extends StatelessWidget {
                                           ? ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(8),
-                                              child: Image.network(
-                                                Connection.buildImageUrl(
-                                                    "storage/${forum.imageUrls.first}"),
-                                                height: 160,
-                                                width: double.infinity,
-                                                fit: BoxFit.cover,
-                                              ),
+                                                child: forum.imageUrls.first.isNotEmpty
+                                                  ? Image.network(
+                                                    Connection.buildImageUrl(
+                                                      "storage/${forum.imageUrls.first}"),
+                                                    height: 160,
+                                                    width: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                  : Container(
+                                                    height: 160,
+                                                    width: double.infinity,
+                                                    color: Colors.grey[300],
+                                                    alignment: Alignment.center,
+                                                    child: const Icon(
+                                                    Icons.image_not_supported,
+                                                    size: 48,
+                                                    color: Colors.grey,
+                                                    ),
+                                                  ),
                                             )
                                           : SizedBox.shrink(),
                                       const SizedBox(height: 12),
