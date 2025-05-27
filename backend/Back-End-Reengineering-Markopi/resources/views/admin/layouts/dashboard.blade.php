@@ -58,9 +58,7 @@
             <section class="content">
                 <div class="container-fluid">
 
-                    <div class="alert alert-warning text-center font-weight-bold">
-                        🚀 INI HALAMAN DASHBOARD UTAMA!
-                    </div>
+                    
 
                     <!-- Info Card Row -->
                     <div class="row">
