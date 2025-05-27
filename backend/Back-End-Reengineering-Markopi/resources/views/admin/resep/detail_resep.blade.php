@@ -140,7 +140,8 @@
                         @endif
                     </div>
                     <a href="javascript:void(0);" id="edit-img" class="edit-icon"><i class="bi bi-pencil"></i></a>
-                    <input type="file" id="edit-img-input" style="display: none;" />
+                    <input type="file" id="edit-img-input" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml" style="display: none;" />
+
                     <button id="save-img" class="edit-icon save-btn" style="display: none;">Simpan</button>
                 </div>
             </div>

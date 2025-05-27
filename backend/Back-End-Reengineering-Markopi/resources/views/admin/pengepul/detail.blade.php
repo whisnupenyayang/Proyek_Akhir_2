@@ -4,6 +4,17 @@
 @section('no-header', true)
 
 @section('content')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('update-form');
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Yakin ingin menyimpan perubahan?')) {
+                e.preventDefault(); // Batalkan submit jika user klik "Batal"
+            }
+        });
+    });
+</script>
+
     <div class="row mb-3">
         <div class="col">
             <a href="{{ route('admin.pengepul') }}" class="btn btn-secondary">

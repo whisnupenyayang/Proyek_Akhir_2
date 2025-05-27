@@ -115,9 +115,14 @@
             </div>
 
             <div class="mb-3">
-                <label for="gambar_resep" class="form-label">gambar resep</label>
-                <input type="file" class="form-control" id="gambar_resep" name="gambar_resep">
+        <label for="gambar_resep" class="form-label">Gambar Resep</label>
+        <input type="file" class="form-control @error('gambar_resep') is-invalid @enderror" id="gambar_resep" name="gambar_resep" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
+        @error('gambar_resep')
+            <div class="invalid-feedback">
+                {{ $message }}
             </div>
+        @enderror
+    </div>
 
             <button type="submit" class="btn btn-success">Simpan resep</button>
         </form>

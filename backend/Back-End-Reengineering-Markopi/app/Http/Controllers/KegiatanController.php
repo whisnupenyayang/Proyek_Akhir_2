@@ -352,10 +352,10 @@ class KegiatanController extends Controller
     {
         // Validasi data input
         $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'url_gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'nama_file' => 'required|file|max:5120',
+            'judul' => 'string|max:255',
+            'deskripsi' => 'string',
+            'url_gambar' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'nama_file' => 'file|max:5120',
         ]);
 
         // Cari data berdasarkan ID

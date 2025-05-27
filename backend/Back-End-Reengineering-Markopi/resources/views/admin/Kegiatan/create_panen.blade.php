@@ -7,7 +7,7 @@
     @csrf
 
     <div class="form-group">
-        <label for="jenis_kopi">Jenis Kopi</label>
+        <label for="jenis_kopi">Jenis Kopi<span style="color:red;">*</span></label>
         <select name="jenis_kopi" class="form-control" required>
             <option value="Arabika">Arabika</option>
             <option value="Robusta">Robusta</option>
@@ -30,22 +30,22 @@
     </div>
 
     <div class="form-group">
-        <label for="judul">Judul Informasi</label>
+        <label for="judul">Judul Informasi<span style="color:red;">*</span></label>
         <input type="text" name="judul" class="form-control" required>
     </div>
 
     <div class="form-group">
-        <label for="deskripsi">Deskripsi</label>
+        <label for="deskripsi">Deskripsi<span style="color:red;">*</span></label>
         <textarea name="deskripsi" class="form-control" rows="5" required></textarea>
     </div>
 
     <div class="form-group">
-        <label for="url_gambar">Upload Gambar</label>
+        <label for="url_gambar">Upload Gambar<span style="color:red;">*</span></label>
         <input type="file" name="url_gambar" accept="image/*" class="form-control-file">
     </div>
 
     <div class="form-group">
-        <label for="nama_file">Upload File</label>
+        <label for="nama_file">Upload File (PDF, DOC, XLS, ZIP) - Maks 5MB<span style="color:red;">*</span></label>
         <input type="file" name="nama_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" class="form-control-file">
     </div>
 

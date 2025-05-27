@@ -29,7 +29,7 @@ class ResepController extends Controller
         $validatedData = $request->validate([
             'nama_resep' => 'required|string|max:100',
             'deskripsi_resep' => 'required|string',
-            'gambar_resep' => 'nullable|image|max:255',
+            'gambar_resep' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
         ]);
 
         // Create a new instance of the Resep model

@@ -89,14 +89,14 @@ class ArtikelController extends Controller
 {
     try {
         $request->validate([
-            'isi_artikel' => 'required',
-            // 'judul_artikel' => 'required', // hapus dulu kalau tidak diedit inline
+            'judul_artikel' => 'required|string|max:255',
+            'isi_artikel' => 'required|string',
+            'gambar.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
 
         $artikel = Artikel::findOrFail($id);
-        // Judul artikel tidak berubah kalau form hanya edit isi artikel
-        // $artikel->judul_artikel = $request->judul_artikel;
 
+        $artikel->judul_artikel = $request->judul_artikel;
         $artikel->isi_artikel = $request->isi_artikel;
 
         if ($request->hasFile('gambar')) {
@@ -105,9 +105,11 @@ class ArtikelController extends Controller
 
             $newImages = [];
             foreach ($request->file('gambar') as $gambar) {
-                $gambarPath = $gambar->store('artikelimage', 'public');
-                $newImages[] = ['gambar' => $gambarPath];
+                $filename = time() . '_' . uniqid() . '.' . $gambar->getClientOriginalExtension();
+                $gambar->move(public_path('images'), $filename);
+                $newImages[] = ['gambar' => $filename];
             }
+
             $artikel->images()->delete();
             $artikel->images()->createMany($newImages);
         }
@@ -119,6 +121,7 @@ class ArtikelController extends Controller
         return redirect()->back()->with('error', $e->getMessage());
     }
 }
+
 
 
     public function destroy($id)

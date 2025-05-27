@@ -23,8 +23,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="gambar" class="form-label">Upload Gambar (boleh lebih dari satu)</label>
-            <input type="file" class="form-control" id="gambar" name="gambar[]" multiple>
+            <label for="gambar" class="form-label">Upload Gambar</label>
+            <input type="file" class="form-control" id="gambar" name="gambar[]" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml" multiple multiple>
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>

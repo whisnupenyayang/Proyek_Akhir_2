@@ -25,23 +25,23 @@ class PengepulController extends Controller
 
     public function store(Request $request)
 {
-    try {
-        $validatedData = $request->validate([
-            'nama_toko' => 'required|string|max:100',
-            'alamat' => 'required|string|max:255',
-            'jenis_kopi' => 'required|string|max:100',
-            'harga' => 'required|numeric',
-            'nomor_telepon' => 'required|string|max:20',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-        ]);
+    // Let Laravel handle validation errors automatically
+    $validatedData = $request->validate([
+        'nama_toko' => 'required|string|max:100',
+        'alamat' => 'required|string|max:255',
+        'jenis_kopi' => 'required|string|max:100',
+        'harga' => 'required|numeric|min:0',
+        'nomor_telepon' => 'required|string|max:20',
+        'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+    ]);
 
-        // Upload gambar jika ada
+    try {
         $namaGambar = null;
         $urlGambar = null;
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
             $namaGambar = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images'), $namaGambar); // Simpan di public/images
+            $file->move(public_path('images'), $namaGambar);
             $urlGambar = 'images/' . $namaGambar;
         }
 
@@ -53,16 +53,15 @@ class PengepulController extends Controller
             'nomor_telepon' => $validatedData['nomor_telepon'],
             'nama_gambar' => $namaGambar,
             'url_gambar' => $urlGambar,
-            'user_id' => 2, // Hardcode user_id untuk testing
+            'user_id' => 2,
         ]);
 
         return redirect()->route('admin.pengepul')->with('success', 'Informasi Pengepul berhasil ditambahkan');
     } catch (Exception $e) {
         Log::error('Error storing pengepul: ' . $e->getMessage());
-        return redirect()->back()->with('error', $e->getMessage())->withInput();
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
     }
 }
-
 
 
 
@@ -80,9 +79,9 @@ class PengepulController extends Controller
             'nama_toko' => 'required|string|max:100',
             'alamat' => 'required|string|max:255',
             'jenis_kopi' => 'required|string|max:100',
-            'harga' => 'required|numeric',
+            'harga' => 'required|numeric|min:0',
             'nomor_telepon' => 'required|string|max:20',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
 
         $pengepul = Pengepul::findOrFail($id);

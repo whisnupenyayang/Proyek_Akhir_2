@@ -15,13 +15,13 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
-        
+
         h1 {
             text-align: center;
             margin-bottom: 20px;
             font-size: 1.8em;
         }
-        
+
         .btn-back {
             margin-bottom: 15px;
             font-size: 1.2em;
@@ -115,9 +115,14 @@
             </div>
 
             <div class="mb-3">
-                <label for="foto_toko" class="form-label">Foto Toko</label>
-                <input type="file" class="form-control" id="foto_toko" name="foto_toko">
+        <label for="foto_toko" class="form-label">Foto Toko</label>
+        <input type="file" class="form-control @error('foto_toko') is-invalid @enderror" id="foto_toko" name="foto_toko" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
+        @error('foto_toko')
+            <div class="invalid-feedback">
+                {{ $message }}
             </div>
+        @enderror
+    </div>
 
             <button type="submit" class="btn btn-success">Simpan Toko</button>
         </form>

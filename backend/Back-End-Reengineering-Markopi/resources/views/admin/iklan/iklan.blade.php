@@ -210,13 +210,6 @@
                         </div>
 
                         <div class="mb-2">
-                            <div style="margin-top: 4px;">
-                                <a href="{{ route('iklan.show', $iklan->id) }}" target="_blank" class="text-link">Lihat detail iklan</a>
-                            </div>
-                        </div>
-
-
-                        <div class="mb-2">
                             <label>Gambar</label>
                             <input type="file" name="gambar" class="form-control">
                         </div>

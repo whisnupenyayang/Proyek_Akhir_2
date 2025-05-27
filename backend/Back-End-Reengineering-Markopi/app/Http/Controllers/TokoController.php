@@ -30,7 +30,7 @@ class TokoController extends Controller
             'nama_toko' => 'required|string|max:255',
             'lokasi' => 'required|string|max:255',
             'jam_operasional' => 'required|string|max:255',
-            'foto_toko' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file
+            'foto_toko' => 'required|image|mimes:jpeg,png,jpg,gif,svg', // Validasi file
         ]);
 
         // Menyimpan data toko

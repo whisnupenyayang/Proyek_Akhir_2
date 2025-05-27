@@ -1,13 +1,14 @@
 @extends('admin.layouts.admin')
 
-@section('no-navbar') 
+@section('no-navbar')
     ->
 @endsection
 
 @section('content')
 <div class="container mt-4">
     <h2>Tambah Iklan Baru</h2>
-    <form action="{{ route('iklan.store') }}" method="POST" enctype="multipart/form-data">
+    <small class="text-muted">* Semua data harus diisi</small>
+    <form id="formTambahIklan" action="{{ route('iklan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <!-- Judul Iklan -->
@@ -50,4 +51,12 @@
         <button type="submit" class="btn btn-primary">Tambah Iklan</button>
     </form>
 </div>
+
+<script>
+    document.getElementById('formTambahIklan').addEventListener('submit', function(e) {
+        if (!confirm('Yakin ingin menyimpan?')) {
+            e.preventDefault(); // Batalkan submit jika tidak yakin
+        }
+    });
+</script>
 @endsection

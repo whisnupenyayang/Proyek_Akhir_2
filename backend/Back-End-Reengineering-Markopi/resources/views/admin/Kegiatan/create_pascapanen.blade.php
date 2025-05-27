@@ -7,7 +7,7 @@
     @csrf
 
     <div class="form-group">
-        <label for="jenis_kopi">Jenis Kopi</label>
+        <label for="jenis_kopi">Jenis Kopi<span style="color:red;">*</span></label>
         <select name="jenis_kopi" class="form-control @error('jenis_kopi') is-invalid @enderror" required>
             <option value="">-- Pilih Jenis Kopi --</option>
             <option value="Arabika" {{ old('jenis_kopi') == 'Arabika' ? 'selected' : '' }}>Arabika</option>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="form-group">
-        <label for="judul">Judul Informasi</label>
+        <label for="judul">Judul Informasi<span style="color:red;">*</span></label>
         <input type="text" name="judul" class="form-control @error('judul') is-invalid @enderror" required value="{{ old('judul') }}">
         @error('judul')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group">
-        <label for="deskripsi">Deskripsi</label>
+        <label for="deskripsi">Deskripsi<span style="color:red;">*</span></label>
         <textarea name="deskripsi" class="form-control @error('deskripsi') is-invalid @enderror" rows="5" required>{{ old('deskripsi') }}</textarea>
         @error('deskripsi')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -58,7 +58,7 @@
     </div>
 
     <div class="form-group">
-        <label for="url_gambar">Upload Gambar</label>
+        <label for="url_gambar">Upload Gambar<span style="color:red;">*</span></label>
         <input type="file" name="url_gambar" class="form-control-file @error('url_gambar') is-invalid @enderror" accept="image/*">
         @error('url_gambar')
             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -66,7 +66,7 @@
     </div>
 
     <div class="form-group">
-        <label for="nama_file">Upload Dokumen (PDF, DOC, XLS, ZIP) - Maks 5MB</label>
+        <label for="nama_file">Upload File (PDF, DOC, XLS, ZIP) - Maks 5MB<span style="color:red;">*</span></label>
         <input type="file" name="nama_file" class="form-control-file @error('nama_file') is-invalid @enderror" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" required>
         @error('nama_file')
             <div class="invalid-feedback d-block">{{ $message }}</div>
