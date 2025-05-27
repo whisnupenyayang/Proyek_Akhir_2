@@ -66,7 +66,7 @@
     </div>
 
     <div class="form-group">
-        <label for="nama_file">Upload File (PDF, DOC, XLS, ZIP) - Maks 5MB<span style="color:red;">*</span></label>
+        <label for="nama_file">Upload File<span style="color:red;">*</span></label>
         <input type="file" name="nama_file" class="form-control-file @error('nama_file') is-invalid @enderror" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" required>
         @error('nama_file')
             <div class="invalid-feedback d-block">{{ $message }}</div>

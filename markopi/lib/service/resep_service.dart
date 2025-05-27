@@ -32,7 +32,7 @@ class ResepService {
 
       if (response.statusCode == 200) {
         return Resep.fromJson(json.decode(response.body));
-      } else {
+      } else {  
         throw Exception('Failed to load resep with ID: $id');
       }
     } catch (e) {

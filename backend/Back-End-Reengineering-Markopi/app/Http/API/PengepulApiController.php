@@ -22,7 +22,7 @@ class PengepulApiController extends Controller
         return response()->json($pengepul);
     }
 
-    public function storePengepul(Request $request)
+    public function     storePengepul(Request $request)
 {
     try {
         $request->validate([

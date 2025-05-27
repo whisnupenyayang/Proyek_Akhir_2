@@ -45,8 +45,8 @@
     </div>
 
     <div class="form-group">
-        <label for="nama_file">Upload File (PDF, DOC, XLS, ZIP) - Maks 5MB<span style="color:red;">*</span></label>
-        <input type="file" name="nama_file" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" class="form-control-file">
+        <label for="nama_file">Upload File<span style="color:red;">*</span></label>
+        <input type="file" name="nama_file" class="form-control-file @error('nama_file') is-invalid @enderror" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip" required>
     </div>
 
     <button type="submit" class="btn btn-success">Simpan Informasi</button>

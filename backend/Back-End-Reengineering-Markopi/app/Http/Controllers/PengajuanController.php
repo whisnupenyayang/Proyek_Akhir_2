@@ -14,7 +14,7 @@ class PengajuanController extends Controller
     {
         $pengajuans = Pengajuan::join('users', 'pengajuans.user_id', '=', 'users.id_users')
             ->where('pengajuans.status', '0')
-            ->select('pengajuans.*', 'users.username')
+            ->select('pengajuans.*', 'users.username', 'users.kabupaten', 'users.no_telp', 'users.nama_lengkap')
             ->get();
 
         return view('admin.komunitas.pengajuan', compact('pengajuans'), [

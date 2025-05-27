@@ -60,14 +60,17 @@ class _ProfileViewState extends State<ProfileView> {
       appBar: AppBar(
         title: Text('Profile'),
         actions: [
-          if (role == 'admin')
-            IconButton(
-              icon: Icon(Icons.admin_panel_settings),
-              tooltip: 'Admin Panel',
-              onPressed: () {
-                Get.snackbar('prank', 'ahjsjhadjshsa'); // Ganti dengan route admin panel yang sesuai
-              },
-            ),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'edit') {}
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'edit',
+                child: Text('Edit Profil'),
+              ),
+            ],
+          ),
         ],
       ),
       body: Container(
