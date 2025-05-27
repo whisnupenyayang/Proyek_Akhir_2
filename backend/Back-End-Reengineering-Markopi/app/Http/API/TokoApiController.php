@@ -12,7 +12,7 @@ class TokoApiController extends Controller
     public function index()
     {
         // $tokos = Toko::all();
-         $tokos = Toko::all()->map(function ($toko) {
+        $tokos = Toko::all()->map(function ($toko) {
             $toko->foto_toko = $toko->foto_toko
                 ? URL::to('/images/' . $toko->foto_toko)
                 : null;

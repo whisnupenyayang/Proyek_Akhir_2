@@ -162,7 +162,7 @@
             <li i class="nav-item">
                 <a href="{{ route('admin.toko') }}" class="nav-link {{ \Route::is('admin.toko') ? 'active' : '' }}">
                     <i class="">
-                        <img src="{{ asset('Icon/news_white.png') }}" alt="Budidaya" width="24" height="24">
+                        <img src="{{ asset('Icon/iconoir_shop.png') }}" alt="Budidaya" width="24" height="24">
                     </i>
                     <p>Toko kopi
                     </p>
@@ -172,7 +172,7 @@
             <li i class="nav-item">
                 <a href="{{ route('admin.resep') }}" class="nav-link {{ \Route::is('admin.resep') ? 'active' : '' }}">
                     <i class="">
-                        <img src="{{ asset('Icon/news_white.png') }}" alt="Budidaya" width="24" height="24">
+                        <img src="{{ asset('Icon/line-md_coffee-half-empty-filled-loop.png') }}" alt="Budidaya" width="24" height="24">
                     </i>
                     <p>Resep minuman
                     </p>

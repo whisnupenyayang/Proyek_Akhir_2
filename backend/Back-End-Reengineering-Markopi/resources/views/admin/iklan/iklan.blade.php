@@ -1,41 +1,112 @@
 @extends('admin.layouts.admin')
 
 @section('content')
-    <style>
-        .card-body {
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-        }
+<style>
+    .card {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        background: white;
+    }
 
-        .card img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            object-fit: cover;
-        }
+    .card img.profile-img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 20px;
+        flex-shrink: 0;
+    }
 
+    .card-info {
+        flex: 1;
+    }
+
+    .card-info h5 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .card-info p {
+        margin: 4px 0;
+        font-size: 14px;
+        color: #555;
+        line-height: 1.4;
+    }
+
+    .card-info strong {
+        font-weight: 600;
+    }
+
+    .show-more {
+        color: #007bff;
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: 5px;
+        user-select: none;
+    }
+
+    .text-link {
+        font-size: 14px;
+        color: #007bff;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 4px;
+        word-break: break-word;
+    }
+
+    .text-link:hover {
+        text-decoration: underline;
+    }
+
+    .btn-container {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .edit-form {
+        margin-top: 15px;
+    }
+
+    .btn-tambah {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
         .card {
-            margin-bottom: 20px;
-            border-radius: 5px;
-            overflow: hidden;
+            padding: 10px;
         }
 
-        .card .row {
-            display: flex;
-            flex-direction: row;
-            align-items: stretch;
+        .card img.profile-img {
+            width: 135px;
+            height: 130px;
+            margin-right: 15px;
         }
 
-        .card-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .card-info h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            /* dari 8px jadi 4px */
+            color: #333;
         }
 
-        .card-text {
-            font-size: 15px;
-            line-height: 1.6;
+        .card-info p {
+            margin: 2px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
         }
 
         .text-link {
@@ -43,166 +114,128 @@
             color: #007bff;
             text-decoration: none;
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 2px;
+            /* dari 4px jadi 2px */
+            word-break: break-word;
         }
 
-        .text-link:hover {
-            text-decoration: underline;
+        .btn-container {
+            margin-top: 8px;
+            gap: 6px;
         }
+    }
+</style>
 
-        .btn-tambah {
-            margin-top: 30px;
-            text-align: center;
+<script>
+    function toggleEdit(id) {
+        const form = document.getElementById('form-' + id);
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleDescription(id) {
+        const moreText = document.getElementById('more-text-' + id);
+        const button = document.getElementById('show-more-' + id);
+
+        if (moreText.style.display === 'inline') {
+            moreText.style.display = 'none';
+            button.innerText = 'Selengkapnya';
+        } else {
+            moreText.style.display = 'inline';
+            button.innerText = 'Tutup';
         }
+    }
+</script>
 
-        .btn-tambah a {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background-color 0.3s;
-        }
+<div class="row">
+    <section class="col-lg-12 connectedSortable" style="position: relative;">
+        @forelse ($iklans as $iklan)
+        <div class="card w-100">
+            <img src="{{ asset('foto/' . $iklan->gambar) }}" alt="Foto Produk" class="profile-img">
 
-        .btn-tambah a:hover {
-            background-color: #218838;
-        }
+            <div class="card-info">
+                <h5>{{ $iklan->judul_iklan }}</h5>
+                <p>
+                    {{ Str::limit($iklan->deskripsi_iklan, 10) }}
+                    @if (strlen($iklan->deskripsi_iklan) > 10)
+                    <span id="more-text-{{ $iklan->id }}" style="display: none;">
+                        {{ substr($iklan->deskripsi_iklan, 10) }}
+                    </span>
+                    <span id="show-more-{{ $iklan->id }}" class="show-more" onclick="toggleDescription({{ $iklan->id }})">Selengkapnya</span>
+                    @endif
+                </p>
 
-        @media (max-width: 768px) {
-            .card-body {
-                padding: 10px;
-            }
+                <p>
+                    @php
+                    $link = trim($iklan->link);
+                    if ($link && !preg_match('/^https?:\/\//', $link)) {
+                    $link = 'http://' . $link;
+                    }
+                    @endphp
 
-            .card .row {
-                flex-direction: row !important;
-            }
+                    @if ($iklan->link)
+                    <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" class="text-link">
+                        {{ $iklan->link }}
+                    </a>
+                    @else
+                    <span class="text-muted">Tidak ada link</span>
+                    @endif
 
-            .col-md-3 {
-                max-width: 40%;
-                padding-right: 10px;
-            }
+                    <br>
+                    <a href="{{ route('iklan.show', $iklan->id) }}" class="text-link">Selengkapnya</a>
+                </p>
 
-            .col-md-9 {
-                max-width: 60%;
-            }
 
-            .card-title {
-                font-size: 16px;
-            }
+                <div class="btn-container">
+                    <button onclick="toggleEdit({{ $iklan->id }})" class="btn btn-warning btn-sm">Edit</button>
+                    <form action="{{ route('iklan.destroy', $iklan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus iklan ini?')" style="margin:0;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                    </form>
+                </div>
 
-            .card-text {
-                font-size: 14px;
-            }
+                <div id="form-{{ $iklan->id }}" style="display: none;" class="edit-form">
+                    <form action="{{ route('iklan.update', $iklan->id) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
 
-            .text-link {
-                width: 100%;
-                text-align: left;
-            }
+                        <div class="mb-2">
+                            <label>Judul</label>
+                            <input type="text" name="judul_iklan" class="form-control" value="{{ $iklan->judul_iklan }}">
+                        </div>
 
-            .btn-tambah {
-                margin-top: 20px;
-            }
+                        <div class="mb-2">
+                            <label>Deskripsi</label>
+                            <textarea name="deskripsi_iklan" class="form-control" rows="3">{{ $iklan->deskripsi_iklan }}</textarea>
+                        </div>
 
-            .btn-tambah a {
-                width: 100%;
-                display: block;
-            }
-        }
-    </style>
-
-    <script>
-        function toggleEdit(id) {
-            const form = document.getElementById('form-' + id);
-            if (form.style.display === 'none') {
-                form.style.display = 'block';
-            } else {
-                form.style.display = 'none';
-            }
-        }
-    </script>
-
-    <div class="row">
-        <section class="col-lg-12 connectedSortable">
-            <div class="card-body">
-                @foreach ($iklans as $iklan)
-                    <div class="card w-100">
-                        <div class="row g-0">
-                            <div class="col-md-3">
-                                <img src="{{ asset('foto/' . $iklan->gambar) }}" alt="Foto Produk" class="profile-img">
-                            </div>
-                            <div class="col-md-9">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $iklan->judul_iklan }}</h5>
-                                    <p class="card-text">
-                                        <strong>Deskripsi:</strong> {{ $iklan->deskripsi_iklan }}<br>
-                                        <strong>Kontak / Link:</strong>
-                                        {!! preg_replace(
-                                            '/(https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?)/',
-                                            '<a href="$1" target="_blank" class="text-link">$1</a>',
-                                            $iklan->link,
-                                        ) !!}
-                                    </p>
-                                    <div class="d-flex gap-2 mt-2">
-                                        {{-- Tombol Edit --}}
-                                        <button onclick="toggleEdit({{ $iklan->id }})" class="btn btn-warning d-flex align-items-center gap-1" title="Edit Iklan">
-                                            <span class="material-icons" style="font-size:16px;">edit</span> Edit
-                                        </button>
-
-                                        {{-- Tombol Hapus --}}
-                                        <form action="{{ route('iklan.destroy', $iklan->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus iklan ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Hapus</button>
-                                        </form>
-                                    </div>
-
-                                    {{-- Form Edit (Hidden by default) --}}
-                                    <div id="form-{{ $iklan->id }}" style="display: none;" class="mt-3">
-                                        <form action="{{ route('iklan.update', $iklan->id) }}" method="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            @method('PUT')
-
-                                            <div class="mb-2">
-                                                <label>Judul</label>
-                                                <input type="text" name="judul_iklan" class="form-control" value="{{ $iklan->judul_iklan }}">
-                                            </div>
-
-                                            <div class="mb-2">
-                                                <label>Deskripsi</label>
-                                                <textarea name="deskripsi_iklan" class="form-control" rows="3">{{ $iklan->deskripsi_iklan }}</textarea>
-                                            </div>
-
-                                            <div class="mb-2">
-                                                <label>Link</label>
-                                                <input type="text" name="link" class="form-control" value="{{ $iklan->link }}">
-                                            </div>
-
-                                            <div class="mb-2">
-                                                <label>Gambar (opsional)</label>
-                                                <input type="file" name="gambar" class="form-control">
-                                            </div>
-
-                                            <button type="submit" class="btn btn-success btn-sm">Simpan</button>
-                                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdit({{ $iklan->id }})">Batal</button>
-                                        </form>
-                                    </div>
-                                </div>
+                        <div class="mb-2">
+                            <div style="margin-top: 4px;">
+                                <a href="{{ route('iklan.show', $iklan->id) }}" target="_blank" class="text-link">Lihat detail iklan</a>
                             </div>
                         </div>
-                    </div>
-                @endforeach
 
-                @if (count($iklans) === 0)
-                    <div class="text-center text-muted">Belum ada data iklan.</div>
-                @endif
 
-                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
-                    <a href="{{ route('iklan.create') }}" class="add-btn">
-                        <span class="material-icons">add</span>
-                    </a>
+                        <div class="mb-2">
+                            <label>Gambar</label>
+                            <input type="file" name="gambar" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-sm">Simpan</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdit({{ $iklan->id }})">Batal</button>
+                    </form>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+        @empty
+        <div class="text-center text-muted">Belum ada data iklan.</div>
+        @endforelse
+
+        <div class="btn-tambah">
+            <a href="{{ route('iklan.create') }}" class="btn btn-success">
+                <span class="material-icons">add</span> Tambah Iklan
+            </a>
+        </div>
+    </section>
+</div>
 @endsection

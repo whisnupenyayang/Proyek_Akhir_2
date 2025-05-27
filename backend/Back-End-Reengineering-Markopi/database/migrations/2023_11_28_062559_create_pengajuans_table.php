@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('pengajuans', function (Blueprint $table) {
             $table->increments('id_pengajuans');
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->unique();
             $table->string('foto_ktp')->nullable();
             $table->string('foto_selfie')->nullable();
             $table->text('deskripsi_pengalaman');

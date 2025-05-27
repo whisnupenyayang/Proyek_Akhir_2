@@ -17,9 +17,9 @@ class PengajuanController extends Controller
         try {
             $request->validate([
                 'deskripsi_pengalaman' => 'required|string',
-                'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'foto_selfie' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'foto_sertifikat' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
+                'foto_selfie' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
+                'foto_sertifikat' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
                 'type_pengajuan' => 'required'
             ]);
 
@@ -58,6 +58,15 @@ class PengajuanController extends Controller
                 }
             }
 
+            $existingPengajuan = Pengajuan::where('user_id', $request->user()->id_users)->first();
+            if ($existingPengajuan) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Anda sudah memiliki pengajuan yang sedang diproses',
+                    'data' => $existingPengajuan
+                ], 400);
+            }
+
             $pengajuan = Pengajuan::create([
                 'foto_ktp' => $fotoKtpPath,
                 'foto_selfie' => $fotoSelfiePath,
@@ -87,22 +96,24 @@ class PengajuanController extends Controller
         }
     }
 
-
     public function getDataByAuth(Request $request)
     {
         try {
-            $data = Pengajuan::where('users_id', $request->user()->id_users)->first();
+            $data = Pengajuan::where('user_id', $request->user()->id_users)->first();
             if (!$data) {
                 return response()->json([
                     'status' => 'errors',
                     'message' => "data tidak data",
-                    'code' => 500
+                    'data' => null,
+                    'code' => 200
                 ]);
             }
+
             return response()->json([
-                'status' => 'errors',
+                'status' => 'success',
                 'message' => "Get data pengajuan success",
-                'code' => 500
+                'data' => $data,
+                'code' => 200
             ]);
 
         } catch (\Exception $e) {
@@ -110,7 +121,7 @@ class PengajuanController extends Controller
                 'status' => 'errors',
                 'message' => "error : " . $e->getMessage(),
                 'code' => 500
-            ]);
+            ], 500);
         }
     }
 }

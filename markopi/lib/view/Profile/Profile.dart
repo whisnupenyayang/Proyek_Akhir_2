@@ -232,9 +232,9 @@ class _ProfileViewState extends State<ProfileView> {
             GestureDetector(
               onTap: () async {
                 await autentikasiC.logout();
-                if (autentikasiC.sukses.value) {
-                  Get.offAllNamed(RouteName.login);
-                }
+                
+                  // Get.offAllNamed(RouteName.beranda);
+                
               },
               child: Container(
                 width: 209,

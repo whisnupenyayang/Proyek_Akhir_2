@@ -268,6 +268,7 @@ class ForumController extends Controller
                     'updated_at' => $komentar->updated_at,
                     'user' => $komentar->user ? [
                         'id_users' => $komentar->user->id_users,
+                        'role' => $komentar->user->role,
                         'nama_lengkap' => $komentar->user->nama_lengkap,
                         'username' => $komentar->user->username,
                     ] : null,

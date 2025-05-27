@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Artikel_Controller.dart';
@@ -24,14 +25,16 @@ class _ListArtikelState extends State<ListArtikel> {
 
     // Menambahkan refresh otomatis ketika halaman pertama kali dibuka
     Future.delayed(Duration.zero, () {
-      artikelC.fetchArtikel(); // Gantilah dengan fungsi yang kamu gunakan untuk mengambil data
+      artikelC
+          .fetchArtikel(); // Gantilah dengan fungsi yang kamu gunakan untuk mengambil data
     });
   }
 
   // Fungsi untuk melakukan refresh
   Future<void> _refreshData() async {
     // Call the function to fetch articles again
-    await artikelC.fetchArtikel(); // Gantilah dengan fungsi yang sesuai untuk mengambil data
+    await artikelC
+        .fetchArtikel(); // Gantilah dengan fungsi yang sesuai untuk mengambil data
     searchC.setArtikel(artikelC.artikel);
   }
 
@@ -62,7 +65,8 @@ class _ListArtikelState extends State<ListArtikel> {
                 return Center(child: CircularProgressIndicator());
               }
               if (artikelC.errorMessage.isNotEmpty) {
-                return Center(child: Text('Error: ${artikelC.errorMessage.value}'));
+                return Center(
+                    child: Text('Error: ${artikelC.errorMessage.value}'));
               }
               if (searchC.filteredArtikel.isEmpty) {
                 return Center(child: Text('Data artikel kosong'));
@@ -76,7 +80,8 @@ class _ListArtikelState extends State<ListArtikel> {
                     final Artikel artikel = searchC.filteredArtikel[index];
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       child: Card(
                         elevation: 4,
                         shape: RoundedRectangleBorder(
@@ -90,22 +95,46 @@ class _ListArtikelState extends State<ListArtikel> {
                               if (artikel.imageUrls.isNotEmpty)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    artikel.imageUrls.first.startsWith('http')
+                                  child: CachedNetworkImage(
+                                    imageUrl: artikel.imageUrls.first
+                                            .startsWith('http')
                                         ? artikel.imageUrls.first
                                         : 'http://192.168.150.244:8000/images/${artikel.imageUrls.first}',
                                     height: 180,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: 180,
-                                        width: double.infinity,
-                                        color: Colors.grey[300],
-                                        child: Icon(Icons.broken_image, size: 50),
-                                      );
-                                    },
+                                    placeholder: (context, url) => Container(
+                                      height: 180,
+                                      width: double.infinity,
+                                      color: Colors.grey[200],
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                      height: 180,
+                                      width: double.infinity,
+                                      color: Colors.grey[300],
+                                      child: Icon(Icons.broken_image, size: 50),
+                                    ),
                                   ),
+
+                                  // Image.network(
+                                  //   artikel.imageUrls.first.startsWith('http')
+                                  //       ? artikel.imageUrls.first
+                                  //       : 'http://192.168.150.244:8000/images/${artikel.imageUrls.first}',
+                                  //   height: 180,
+                                  //   width: double.infinity,
+                                  //   fit: BoxFit.cover,
+                                  //   errorBuilder: (context, error, stackTrace) {
+                                  //     return Container(
+                                  //       height: 180,
+                                  //       width: double.infinity,
+                                  //       color: Colors.grey[300],
+                                  //       child: Icon(Icons.broken_image, size: 50),
+                                  //     );
+                                  //   },
+                                  // ),
                                 ),
                               SizedBox(height: 8),
                               Text(

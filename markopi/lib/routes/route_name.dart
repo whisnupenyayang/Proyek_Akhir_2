@@ -1,5 +1,9 @@
+import 'package:markopi/view/component/MyBottomNavigation.dart';
+
 abstract class RouteName {
-  static const beranda = "/";                      // Halaman utama
+  // static const MyBottomNavigationBar = "/"; 
+  static const beranda = "/beranda";                     // Halaman utama
+                    // Halaman utama
   static const kegiatan = "/kegiatan";              // Halaman kegiatan
   static const pengepul = "/pengepul";              // Halaman pengepul
   static const tokoKoppi = "/tokokopi";             // Halaman toko kopi

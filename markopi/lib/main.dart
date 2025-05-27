@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markopi/routes/app_page.dart';
+import 'package:markopi/routes/route_name.dart';
 import 'package:markopi/service/User_Storage.dart';
 import 'package:markopi/view/component/MyBottomNavigation.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -24,8 +25,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyBottomNavigationBar(), // Gunakan MyBottomNavigationBar di sini
-      getPages: AppPages.pages,
+ 
+       initialRoute: RouteName.beranda,
+  getPages: AppPages.pages,
     );
   }
 }
