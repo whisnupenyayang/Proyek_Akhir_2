@@ -2,16 +2,39 @@
 
 @section('content')
     <style>
+        .btn-tambah-wrapper {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .toko-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
         .card-toko {
             display: flex;
             flex-direction: column;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
             width: 100%;
-            background: white;
+            background: transparent;
+            border-bottom: 1px solid #a5a3a3; /* garis pembatas */
+            padding-bottom: 15px;
+        }
+
+        /* Hilangkan garis pembatas untuk card terakhir agar tidak double border */
+        .card-toko:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
 
         .card-toko img {
@@ -111,8 +134,6 @@
         }
     </style>
 
-    <h1>{{ $title }}</h1>
-
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -120,29 +141,36 @@
     @endif
 
     <div class="container">
-        @foreach ($toko as $t)
-            <div class="card-toko">
-                @if ($t->foto_toko)
-                    <img src="{{ asset('images/' . $t->foto_toko) }}" alt="Foto Toko">
-                @else
-                    <div style="width:100px; height:100px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888; font-size:12px;">
-                        Tidak ada gambar
-                    </div>
-                @endif
-
-                <div class="card-toko-content">
-                    <h5>{{ $t->nama_toko }}</h5>
-                    <p><strong>Lokasi:</strong> {{ $t->lokasi }}</p>
-                    <p><strong>Jam Operasional:</strong> {{ $t->jam_operasional }}</p>
-                    <a href="{{ route('toko.detail', $t->id) }}" class="btn-detail">Detail</a>
-                </div>
-            </div>
-        @endforeach
-
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
+        <div class="btn-tambah-wrapper">
             <a href="{{ route('toko.create') }}" class="btn btn-primary">
                 Tambah Toko
             </a>
+        </div>
+
+        <div class="toko-container">
+            @forelse ($toko as $t)
+                <div class="card-toko">
+                    @if ($t->foto_toko)
+                        <img src="{{ asset('images/' . $t->foto_toko) }}" alt="Foto Toko">
+                    @else
+                        <div style="width:100px; height:100px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888; font-size:12px;">
+                            Tidak ada gambar
+                        </div>
+                    @endif
+
+                    <div class="card-toko-content">
+                        <h5>{{ $t->nama_toko }}</h5>
+                        <p><strong>Lokasi:</strong> {{ $t->lokasi }}</p>
+                        <p><strong>Jam Operasional:</strong> {{ $t->jam_operasional }}</p>
+                        <a href="{{ route('toko.detail', $t->id) }}" class="btn-detail">Detail</a>
+                    </div>
+                </div>
+            @empty
+                <div class="text-center py-4 text-muted" style="font-size: 16px;">
+                    Belum ada data toko.
+                </div>
+            @endforelse
+
         </div>
     </div>
 @endsection
