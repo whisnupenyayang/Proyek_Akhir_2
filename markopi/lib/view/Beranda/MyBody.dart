@@ -52,9 +52,7 @@ class _BerandaBodyState extends State<BerandaBody> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 30),
-            MainMenu(),
-            SizedBox(height: 30),
-            
+            MainMenu(), 
             buildHargaRataRata(),
             SizedBox(height: 10),
             IklanBanner(),
@@ -65,44 +63,122 @@ class _BerandaBodyState extends State<BerandaBody> {
   }
 
   Widget buildHargaRataRata() {
-    return Obx(() {
-      if (pengepulC.pengepul.isEmpty) {
-        return Center(child: CircularProgressIndicator());
-      }
+  return Obx(() {
+    if (pengepulC.pengepul.isEmpty) {
+      return Center(child: CircularProgressIndicator());
+    }
 
-      double totalHarga = 0;
-      pengepulC.pengepul.forEach((item) {
-        totalHarga += item.harga?.toDouble() ?? 0;
-      });
+    // Filter berdasarkan jenis kopi
+    final arabikaList = pengepulC.pengepul
+        .where((item) => item.jenis_kopi?.toLowerCase() == 'arabika')
+        .toList();
+    final robustaList = pengepulC.pengepul
+        .where((item) => item.jenis_kopi?.toLowerCase() == 'robusta')
+        .toList();
 
-      double hargaRataRata = totalHarga / pengepulC.pengepul.length;
+    // Hitung rata-rata
+    double avgArabika = arabikaList.isNotEmpty
+        ? arabikaList.map((e) => e.harga?.toDouble() ?? 0).reduce((a, b) => a + b) / arabikaList.length
+        : 0;
+    double avgRobusta = robustaList.isNotEmpty
+        ? robustaList.map((e) => e.harga?.toDouble() ?? 0).reduce((a, b) => a + b) / robustaList.length
+        : 0;
 
-      final formattedHarga =
-          NumberFormat("#,###", "id_ID").format(hargaRataRata.toInt());
+    final hargaArabika = NumberFormat("#,###", "id_ID").format(avgArabika.toInt());
+    final hargaRobusta = NumberFormat("#,###", "id_ID").format(avgRobusta.toInt());
 
-      return Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Harga rata-rata kopi per 1 kg: Rp $formattedHarga',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Color(0xFFD4ECFF),
+          ),
+          child: Text(
+            'Harga Pasaran Kopi',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.left,
           ),
         ),
-      );
-    });
-  }
+        SizedBox(height: 8),
+        Card(
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.black),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Kopi Arabika',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Rp$hargaArabika/Kg',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Card(
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 4),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(color: Colors.black),
+          ),
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Kopi Robusta',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Rp$hargaRobusta/Kg',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  });
+}
+
+
+
+
 }

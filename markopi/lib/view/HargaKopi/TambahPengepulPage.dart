@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart';
 import 'package:markopi/controllers/utils/constants.dart';
 
-
 class TambahPengepulPage extends StatefulWidget {
   @override
   _TambahPengepulPageState createState() => _TambahPengepulPageState();
@@ -35,14 +34,15 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
   }
 
   Future<void> _pickImageFromCamera() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
-  if (pickedFile != null) {
-    setState(() {
-      _image = File(pickedFile.path);
-    });
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
   }
-}
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -69,7 +69,7 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
     }
   }
 
-   void _showImagePicker() {
+  void _showImagePicker() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -101,7 +101,6 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,27 +120,27 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
                   color: Colors.grey[300],
                   child: _image != null
                       ? Image.file(_image!, fit: BoxFit.cover)
-                      : Center(child: Text('Pilih Gambar')),
+                      : Center(child: Text('Pilih gambar')),
                 ),
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: namaController,
-                decoration: InputDecoration(labelText: 'Nama Toko'),
+                decoration: InputDecoration(labelText: 'Nama toko'),
                 validator: (value) =>
                     value!.isEmpty ? 'Nama toko harus diisi' : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: alamatController,
-                decoration: InputDecoration(labelText: 'Alamat'),
+                decoration: InputDecoration(labelText: 'Alamat toko'),
                 validator: (value) =>
                     value!.isEmpty ? 'Alamat harus diisi' : null,
               ),
               SizedBox(height: 16),
               TextFormField(
                 controller: teleponController,
-                decoration: InputDecoration(labelText: 'Nomor Telepon'),
+                decoration: InputDecoration(labelText: 'Nomor telepon'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
                     value!.isEmpty ? 'Nomor telepon harus diisi' : null,
@@ -149,13 +148,13 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
               SizedBox(height: 16),
               TextFormField(
                 controller: hargaController,
-                decoration: InputDecoration(labelText: 'Harga'),
+                decoration: InputDecoration(labelText: 'Harga rata - rata/Kg'),
                 keyboardType: TextInputType.number,
                 validator: (value) =>
                     value!.isEmpty ? 'Harga harus diisi' : null,
               ),
               SizedBox(height: 24),
-              Text('Jenis Kopi', style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Jenis kopi', style: TextStyle(fontWeight: FontWeight.bold)),
               CheckboxListTile(
                 title: Text('Arabika'),
                 value: selectedJenisKopi.contains('Arabika'),
@@ -185,8 +184,11 @@ class _TambahPengepulPageState extends State<TambahPengepulPage> {
               SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text('Simpan'),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.brown),
+                child: const Text('Simpan'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.brown, 
+                  foregroundColor: Colors.white, 
+                ),
               )
             ],
           ),

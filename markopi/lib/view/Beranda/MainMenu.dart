@@ -28,7 +28,7 @@ class _MainMenuState extends State<MainMenu> {
     'assets/images/panen_baru.jpg',
     'assets/images/pascapanen_baru.jpg',
     'assets/images/resepkopi.jpg',
-    'assets/images/toko_kopi.jpg',
+    'assets/images/toko.png',
     'assets/images/laporan_baru.jpg',
   ];
 

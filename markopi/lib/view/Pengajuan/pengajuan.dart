@@ -57,9 +57,12 @@ class PengajuanPage extends StatelessWidget {
                   file: controller.fotoSelfie,
                   onTap: () => controller.pickImage(controller.fotoSelfie)),
               UploadTile(
-                  label: "Foto Sertifikat",
-                  file: controller.fotoSertifikat,
-                  onTap: () => controller.pickImage(controller.fotoSertifikat)),
+                label: controller.tipePengajuan.value == 'pengepul'
+                    ? "Foto Surat Kepemilikan Usaha / Surat Perizinan"
+                    : "Foto Sertifikat",
+                file: controller.fotoSertifikat,
+                onTap: () => controller.pickImage(controller.fotoSertifikat),
+              ),
               const SizedBox(height: 20),
               controller.isLoading.value
                   ? const Center(child: CircularProgressIndicator())

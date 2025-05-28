@@ -185,7 +185,7 @@ class ForumController extends GetxController {
   if (token == null) {
     Get.snackbar('Error', 'Token tidak tersedia');
     return;
-  }
+  } 
 
 
   final response = await forumProvider.tambahForum(

@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:markopi/controllers/PengajuanTransaksi_Controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:markopi/providers/Connection.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart';
-import 'package:markopi/routes/route_name.dart';
 
 class DetailPengepuldanPetani extends StatefulWidget {
   @override
@@ -14,9 +12,6 @@ class DetailPengepuldanPetani extends StatefulWidget {
 }
 
 class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
-  final PengajuanTransaksiController pengajuanC =
-      Get.put(PengajuanTransaksiController());
-
   final PengepulController pengepulC = Get.put(PengepulController());
 
   String? role;

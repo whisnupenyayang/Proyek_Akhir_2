@@ -215,7 +215,7 @@ class _ProfileViewState extends State<ProfileView> {
                     SizedBox(height: 15),
                     // Email
                     Text(
-                      'email',
+                      'Email',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -244,7 +244,7 @@ class _ProfileViewState extends State<ProfileView> {
                     SizedBox(height: 15),
                     // Alamat
                     Text(
-                      'alamat',
+                      'Provinsi/Kota',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,

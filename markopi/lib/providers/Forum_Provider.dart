@@ -26,7 +26,7 @@ class ForumProvider extends GetConnect {
   request.fields['deskripsi'] = deskripsi;
 
   for (var file in gambarFiles) {
-    var multipartFile = await http.MultipartFile.fromPath('gambar[]', file.path);
+    var multipartFile = await http.MultipartFile.fromPath('gambar', file.path);
     request.files.add(multipartFile);
   }
 

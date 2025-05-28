@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:markopi/controllers/Autentikasi_Controller.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart';
 import 'package:markopi/providers/Connection.dart';
 import 'package:markopi/routes/route_name.dart';
-import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class KopiPage extends StatefulWidget {
   @override
@@ -11,21 +13,31 @@ class KopiPage extends StatefulWidget {
 }
 
 class _KopiPageState extends State<KopiPage> {
-  bool isMyShop = false; // Initially show all stores (not just my shop)
+  bool isMyShop = false;
   final PengepulController pengepulC = Get.put(PengepulController());
+  final AutentikasiController authC = Get.put(AutentikasiController());
+  String? role;
 
   @override
   void initState() {
     super.initState();
-    pengepulC.fetchPengepul(); // Fetch all stores initially
-    pengepulC.fetchPengepulByUser(); // Fetch user's stores as well
+    pengepulC.fetchPengepul();
+    pengepulC.fetchPengepulByUser();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      role = prefs.getString('role');
+    });
   }
 
   Future<void> _refreshData() async {
     if (isMyShop) {
-      await pengepulC.fetchPengepulByUser(); // Refresh user's store data
+      await pengepulC.fetchPengepulByUser();
     } else {
-      await pengepulC.fetchPengepul(); // Refresh all store data
+      await pengepulC.fetchPengepul();
     }
   }
 
@@ -49,16 +61,10 @@ class _KopiPageState extends State<KopiPage> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              // Toggle buttons for "Toko Milik Saya" and "Semua Toko"
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isMyShop = true;
-                      });
-                    },
+                    onPressed: () => setState(() => isMyShop = true),
                     child: Text(
                       'Toko Milik Saya',
                       style: TextStyle(
@@ -67,11 +73,7 @@ class _KopiPageState extends State<KopiPage> {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isMyShop = false;
-                      });
-                    },
+                    onPressed: () => setState(() => isMyShop = false),
                     child: Text(
                       'Semua Toko',
                       style: TextStyle(
@@ -87,17 +89,18 @@ class _KopiPageState extends State<KopiPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(RouteName.pengepul + '/tambah');
-        },
-        backgroundColor: Colors.brown,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: role == 'pengepul'
+          ? FloatingActionButton(
+              onPressed: () {
+                Get.toNamed(RouteName.pengepul + '/tambah');
+              },
+              backgroundColor: Colors.brown,
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 
-  // Build the grid of stores
   Widget _buildPengepulGrid() {
     return Obx(() {
       final pengepulList =
@@ -105,8 +108,7 @@ class _KopiPageState extends State<KopiPage> {
 
       if (pengepulList.isEmpty) {
         return const Center(
-          child:
-              Text("Tidak ada data pengepul", style: TextStyle(fontSize: 16)),
+          child: Text("Tidak ada data pengepul", style: TextStyle(fontSize: 16)),
         );
       }
 
@@ -115,7 +117,7 @@ class _KopiPageState extends State<KopiPage> {
           crossAxisCount: 2,
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.68,
         ),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -142,23 +144,17 @@ class _KopiPageState extends State<KopiPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               child: SizedBox(
-                height: 100,
+                height: 140,
                 width: double.infinity,
                 child: CachedNetworkImage(
                   imageUrl: Connection.buildImageUrl(item.url_gambar),
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.brown,
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.error,
-                    color: Colors.red,
-                  ),
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator(color: Colors.brown)),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.error, color: Colors.red),
                 ),
               ),
             ),
@@ -169,22 +165,25 @@ class _KopiPageState extends State<KopiPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '${item.nama_toko}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    'Rp ${item.harga.toString()}/Kg',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
                     ),
                   ),
-                
-                  _buildInfoRow('Lokasi:', item.alamat ?? '-'),
-                  _buildInfoRow(
-                    'Harga Beli:',
-                    'Rp ${item.harga.toString()}',
-                    textColor: Colors.green,
-                    isBold: true,
+                  const SizedBox(height: 6),
+                  Text(
+                    '${item.nama_toko} - ${item.jenis_kopi ?? '-'}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  if (item.jenis_kopi != null && item.jenis_kopi!.isNotEmpty)
-                    _buildInfoRow('Jenis Kopi:', item.jenis_kopi!),
+                  const SizedBox(height: 6),
+                  _buildInfoRow('Lokasi:', item.alamat ?? '-'),
                 ],
               ),
             ),
@@ -198,7 +197,6 @@ class _KopiPageState extends State<KopiPage> {
       {bool isBold = false, Color? textColor}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           label,

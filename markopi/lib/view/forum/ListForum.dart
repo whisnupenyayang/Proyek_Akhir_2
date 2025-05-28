@@ -97,6 +97,9 @@ class ListForum extends StatelessWidget {
                         itemBuilder: (context, index) {
                           if (index < forumController.forum.length) {
                             final forum = forumController.forum[index];
+                            debugPrint(
+                                'Jumlah gambar: ${forum.imageUrls.length}');
+                            debugPrint('Daftar gambar: ${forum.imageUrls}');
                             return Card(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -122,8 +125,7 @@ class ListForum extends StatelessWidget {
                                               color: Colors.white,
                                               shape: BoxShape.circle,
                                             ),
-                                            padding:
-                                                const EdgeInsets.all(8),
+                                            padding: const EdgeInsets.all(8),
                                             child: Icon(
                                               Icons.person,
                                               size: 40,
@@ -145,8 +147,8 @@ class ListForum extends StatelessWidget {
                                               ),
                                               Text(
                                                 forum.tanggal,
-                                                style:
-                                                    const TextStyle(fontSize: 10),
+                                                style: const TextStyle(
+                                                    fontSize: 10),
                                               ),
                                             ],
                                           )
@@ -156,7 +158,8 @@ class ListForum extends StatelessWidget {
 
                                       // Gambar forum dengan indikator halaman
                                       forum.imageUrls.isNotEmpty
-                                          ? ForumImageSlider(imageUrls: forum.imageUrls)
+                                          ? ForumImageSlider(
+                                              imageUrls: forum.imageUrls)
                                           : const SizedBox.shrink(),
 
                                       const SizedBox(height: 12),
