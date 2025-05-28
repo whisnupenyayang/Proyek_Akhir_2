@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Toko</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+@extends('admin.layouts.admin')
+
+@section('title', 'Detail Toko')
+
+@section('content')
     <style>
         .container {
             max-width: 800px;
@@ -40,9 +37,13 @@
             border-radius: 8px;
         }
 
+        .field-container {
+            margin-bottom: 15px;
+        }
+
         .action-buttons {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             margin-top: 20px;
         }
 
@@ -50,7 +51,7 @@
             background-color: #f44336;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 16px;
             font-size: 1.2em;
             border-radius: 50%;
             cursor: pointer;
@@ -63,29 +64,11 @@
         .btn-trash i {
             font-size: 1.5em;
         }
-
-        .save-btn {
-            color: #28a745;
-            cursor: pointer;
-        }
-
-        .save-btn:hover {
-            text-decoration: underline;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
     </style>
-</head>
-<body>
 
     <div class="container">
-        <a href="{{ route('admin.toko') }}" class="btn btn-primary btn-back"><i class="bi bi-arrow-left"></i> Kembali</a>
-        <h1>Detail Toko</h1>
+
+
 
         <div class="detail-card">
             <!-- Nama Toko -->
@@ -95,22 +78,24 @@
 
             <!-- Lokasi Toko -->
             <div class="field-container">
-                <p id="toko-lokasi"><strong>Lokasi:</strong> <a href="{{ $toko->lokasi }}" target="_blank">{{ $toko->lokasi }}</a></p>
+                <p id="toko-lokasi"><strong>Lokasi:</strong>
+                    <a href="{{ $toko->lokasi }}" target="_blank">{{ $toko->lokasi }}</a>
+                </p>
             </div>
 
-            <!-- Jam Operasional Toko -->
+            <!-- Jam Operasional -->
             <div class="field-container">
                 <p id="toko-jam"><strong>Jam Operasional:</strong> {{ $toko->jam_operasional }}</p>
             </div>
 
-            <!-- Deskripsi Toko -->
+            <!-- Deskripsi -->
             <div class="field-container">
                 <p id="toko-desc"><strong>Deskripsi:</strong> {{ $toko->deskripsi }}</p>
             </div>
 
             <!-- Foto Toko -->
             <div class="field-container">
-                @if($toko->foto_toko)
+                @if ($toko->foto_toko)
                     <img id="current-image" src="{{ asset('images/' . $toko->foto_toko) }}" alt="Foto Toko">
                 @else
                     <p>Tidak ada foto toko.</p>
@@ -118,20 +103,13 @@
             </div>
         </div>
 
-        <!-- Action buttons -->
+        <!-- Tombol Aksi -->
         <div class="action-buttons">
-            <!-- Delete button (trash icon) -->
             <form action="{{ route('toko.destroy', $toko->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-trash">
-                    <i class="bi bi-trash"></i>
-                </button>
+                 <button type="submit" class="btn btn-danger">Hapus</button>
             </form>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+@endsection

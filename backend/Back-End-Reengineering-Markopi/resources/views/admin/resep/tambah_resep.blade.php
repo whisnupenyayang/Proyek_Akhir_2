@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layouts.admin')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah resep</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+@section('title', 'Tambah Resep')
+
+@section('content')
     <style>
-        /* Base Styles for Mobile */
         .container {
             max-width: 100%;
             margin: 0 auto;
@@ -28,7 +24,6 @@
             font-size: 1.2em;
         }
 
-        /* Form Styling */
         .mb-3 label {
             font-size: 1.1em;
         }
@@ -44,11 +39,9 @@
             font-size: 1.1em;
         }
 
-        /* Responsive styles for Mobile devices (max-width: 767px) */
         @media (max-width: 767px) {
             h1 {
                 font-size: 1.6em;
-                /* Adjust font size for small screens */
             }
 
             .container {
@@ -57,7 +50,6 @@
 
             .form-control {
                 font-size: 1em;
-                /* Adjust font size for mobile devices */
             }
 
             .btn-success {
@@ -65,7 +57,6 @@
             }
         }
 
-        /* Responsive styles for Desktop (min-width: 768px) */
         @media (min-width: 768px) {
             .container {
                 max-width: 800px;
@@ -91,45 +82,36 @@
             }
         }
     </style>
-</head>
-
-<body>
 
     <div class="container">
-    <a href="{{ route('admin.resep') }}" class="btn btn-primary btn-back"><i class="bi bi-arrow-left"></i> Kembali</a>
 
-        <h1>Tambah resep</h1>
 
-        <!-- Form for creating a new store -->
+
+
         <form action="{{ route('resep.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
-                <label for="nama_resep" class="form-label">Nama resep</label>
+                <label for="nama_resep" class="form-label">Nama Resep</label>
                 <input type="text" class="form-control" id="nama_resep" name="nama_resep" required>
             </div>
 
             <div class="mb-3">
-                <label for="deskripsi_resep" class="form-label">Deskripsi resep</label>
+                <label for="deskripsi_resep" class="form-label">Deskripsi Resep</label>
                 <textarea class="form-control" id="deskripsi_resep" name="deskripsi_resep" required></textarea>
             </div>
 
             <div class="mb-3">
-        <label for="gambar_resep" class="form-label">Gambar Resep</label>
-        <input type="file" class="form-control @error('gambar_resep') is-invalid @enderror" id="gambar_resep" name="gambar_resep" accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml">
-        @error('gambar_resep')
-            <div class="invalid-feedback">
-                {{ $message }}
+                <label for="gambar_resep" class="form-label">Gambar Resep</label>
+                <input type="file" class="form-control @error('gambar_resep') is-invalid @enderror" id="gambar_resep" name="gambar_resep" accept="image/*">
+                @error('gambar_resep')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-        @enderror
-    </div>
 
-            <button type="submit" class="btn btn-success">Simpan resep</button>
+            <button type="submit" class="btn btn-success">Simpan Resep</button>
         </form>
-
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+@endsection

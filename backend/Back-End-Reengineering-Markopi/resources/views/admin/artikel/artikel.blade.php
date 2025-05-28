@@ -123,47 +123,66 @@
             padding: 15px;
         }
 
-        .add-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #28a745;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 20px;
-        }
+    .btn-tambah-artikel {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #007bff;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s;
+        border: none;
+    }
 
-        .add-btn:hover {
-            background-color: #218838;
-            color: white;
-        }
+    .btn-tambah-artikel:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+
     </style>
 
     <div class="container-artikel">
-        @foreach ($artikels as $item)
-            <div class="card-artikel">
-                @if ($item->images->count() > 0)
-                    <img src="{{ asset('images/' . $item->images->first()->gambar) }}" alt="Gambar Artikel">
-                @else
-                    <div style="width:100px; height:100px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888; font-size:12px;">
-                        Tidak ada gambar
-                    </div>
-                @endif
 
-                <div class="card-artikel-content">
-                    <h3>{{ $item->judul_artikel }}</h3>
-                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->isi_artikel), 30, '...') }}</p>
-                    <a href="{{ route('artikel.show', $item->id_artikels) }}" class="read-more-link">Selengkapnya</a>
-                </div>
-            </div>
-        @endforeach
-
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
-            <a href="{{ route('artikel.create') }}" class="add-btn">
-                <span class="material-icons">add</span>
-            </a>
-        </div>
+     {{-- Tombol Tambah Artikel di luar border, pojok kiri atas --}}
+    <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
+        <a href="{{ route('artikel.create') }}" class="btn-tambah-artikel">
+            <span class="material-icons" style="margin-right: 6px;">add</span> Tambah Artikel
+        </a>
     </div>
+
+
+    {{-- Kotak Artikel dengan Border --}}
+    <div style="border: 1px solid #ccc; border-radius: 10px; padding: 20px; background: #fefefe;">
+        @if ($artikels->isEmpty())
+            <div style="text-align: center; color: #666; font-size: 18px; padding: 40px 0;">
+                Belum ada artikel.
+            </div>
+        @else
+            @foreach ($artikels as $item)
+                <div class="card-artikel">
+                    @if ($item->images->count() > 0)
+                        <img src="{{ asset('images/' . $item->images->first()->gambar) }}" alt="Gambar Artikel">
+                    @else
+                        <div style="width:100px; height:100px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#888; font-size:12px;">
+                            Tidak ada gambar
+                        </div>
+                    @endif
+
+                    <div class="card-artikel-content">
+                        <h3>{{ $item->judul_artikel }}</h3>
+                        <p>{{ \Illuminate\Support\Str::limit(strip_tags($item->isi_artikel), 30, '...') }}</p>
+                        <a href="{{ route('artikel.show', $item->id_artikels) }}" class="read-more-link">Selengkapnya</a>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+    </div>
+</div>
+
+
+
 @endsection
