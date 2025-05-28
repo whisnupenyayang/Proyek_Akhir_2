@@ -40,16 +40,20 @@ class _ForumKomentarState extends State<ForumKomentar> {
     showDialog(
       context: context,
       builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.all(10),
+        backgroundColor: Colors.black,
+        insetPadding: EdgeInsets.zero,
         child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
+          onTap: () => Navigator.of(context).pop(),
           child: InteractiveViewer(
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.contain,
+            panEnabled: true,
+            scaleEnabled: true,
+            minScale: 1.0,
+            maxScale: 5.0,
+            child: Center(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
@@ -124,7 +128,7 @@ class _ForumKomentarState extends State<ForumKomentar> {
                                         ),
                                         SizedBox(width: 10),
                                         Text(
-                                          forum.user.username,
+                                          forum.user.namaLengkap,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -142,33 +146,13 @@ class _ForumKomentarState extends State<ForumKomentar> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           forum.imageUrls.isNotEmpty
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    _showFullScreenImage(
-                                                      Connection.buildImageUrl(
-                                                          "storage/${forum.imageUrls.first}"),
-                                                    );
-                                                  },
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.vertical(
-                                                            top:
-                                                                Radius.circular(
-                                                                    10)),
-                                                    child: Image.network(
-                                                      Connection.buildImageUrl(
-                                                          "storage/${forum.imageUrls.first}"),
-                                                      height: 200,
-                                                      width: double.infinity,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                              ? ForumImageSlider(
+                                                  imageUrls: forum.imageUrls,
+                                                  onTapImage:
+                                                      _showFullScreenImage,
                                                 )
-                                              : Container(
-                                                  height: 80,
-                                                  width: double.infinity,
-                                                  color: Colors.black12,
-                                                ),
+                                              : const SizedBox.shrink(),
+                                          const SizedBox(height: 12),
                                           Padding(
                                             padding: const EdgeInsets.all(10.0),
                                             child: Column(
@@ -410,6 +394,82 @@ class _ForumKomentarState extends State<ForumKomentar> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ForumImageSlider extends StatefulWidget {
+  final List<String> imageUrls;
+  final Function(String imageUrl) onTapImage;
+
+  const ForumImageSlider({
+    Key? key,
+    required this.imageUrls,
+    required this.onTapImage,
+  }) : super(key: key);
+
+  @override
+  State<ForumImageSlider> createState() => _ForumImageSliderState();
+}
+
+class _ForumImageSliderState extends State<ForumImageSlider> {
+  late PageController _pageController;
+  final RxInt _currentPage = 0.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _currentPage.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.imageUrls.length,
+            onPageChanged: (index) {
+              _currentPage.value = index;
+            },
+            itemBuilder: (context, index) {
+              final imageUrl = Connection.buildImageUrl(
+                  "storage/${widget.imageUrls[index]}");
+              return GestureDetector(
+                onTap: () => widget.onTapImage(imageUrl),
+                child: Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[300],
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.image_not_supported,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 8),
+        Obx(() => Text(
+              'Gambar ke-${_currentPage.value + 1} dari ${widget.imageUrls.length}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            )),
+      ],
     );
   }
 }

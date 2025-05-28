@@ -37,7 +37,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
         leading: BackButton(),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Obx(() {
           var item = pengepulC.detailPengepul.value;
 
@@ -49,11 +49,11 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                 borderRadius: BorderRadius.circular(12),
                 child: item.nama_gambar != null && item.nama_gambar.isNotEmpty
                     ? AspectRatio(
-                        aspectRatio: 16 / 9, // sesuaikan rasio sesuai kebutuhan
+                        aspectRatio: 16 / 9,
                         child: CachedNetworkImage(
                           imageUrl: Connection.buildImageUrl(item.url_gambar),
                           width: double.infinity,
-                          fit: BoxFit.contain, // agar gambar tidak terpotong
+                          fit: BoxFit.contain,
                           placeholder: (context, url) =>
                               Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => Container(
@@ -115,13 +115,60 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                             TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 12),
-                      _buildInfoRow(
-                          'Alamat', item.alamat ?? 'Alamat tidak tersedia'),
+
+                      // Alamat sebagai link ke Google Maps
+                      item.alamat != null
+                          ? GestureDetector(
+                              onTap: () {
+                                final encodedLocation =
+                                    Uri.encodeComponent(item.alamat!);
+                                final googleMapsUrl = Uri.parse(
+                                    'https://www.google.com/maps/search/?api=1&query=$encodedLocation');
+                                launchUrl(googleMapsUrl,
+                                    mode: LaunchMode.externalApplication);
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        'Alamat',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        item.alamat!,
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : _buildInfoRow(
+                              'Alamat', 'Alamat tidak tersedia'),
+
                       Divider(),
                       _buildInfoRow('Nomor Telepon',
                           item.nomor_telepon ?? 'Nomor tidak tersedia'),
                       Divider(),
-                      _buildInfoRow('Jenis Kopi', item.jenis_kopi ?? 'Tidak tersedia'),
+                      _buildInfoRow(
+                          'Jenis Kopi', item.jenis_kopi ?? 'Tidak tersedia'),
                     ],
                   ),
                 ),
@@ -159,7 +206,8 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                           mode: LaunchMode.externalApplication);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('WhatsApp tidak tersedia di perangkat ini')));
+                          content:
+                              Text('WhatsApp tidak tersedia di perangkat ini')));
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -226,7 +274,6 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
     );
   }
 
-  // Method untuk menghapus pengepul
   void _deletePengepul(int id) {
     showDialog(
       context: context,
@@ -237,15 +284,15 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
           actions: [
             TextButton(
               onPressed: () {
-                Get.back(); // Menutup dialog
+                Get.back();
               },
               child: Text("Batal"),
             ),
             TextButton(
               onPressed: () {
-                pengepulC.deletePengepul(id); // Panggil deletePengepul
-                Get.back(); // Menutup dialog setelah berhasil
-                Get.back(); // Kembali ke halaman sebelumnya
+                pengepulC.deletePengepul(id);
+                Get.back();
+                Get.back();
               },
               child: Text("Hapus"),
             ),

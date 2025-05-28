@@ -11,21 +11,21 @@ class KopiPage extends StatefulWidget {
 }
 
 class _KopiPageState extends State<KopiPage> {
-  bool isMyShop = false;  // Initially show all stores (not just my shop)
+  bool isMyShop = false; // Initially show all stores (not just my shop)
   final PengepulController pengepulC = Get.put(PengepulController());
 
   @override
   void initState() {
     super.initState();
-    pengepulC.fetchPengepul();  // Fetch all stores initially
-    pengepulC.fetchPengepulByUser();  // Fetch user's stores as well
+    pengepulC.fetchPengepul(); // Fetch all stores initially
+    pengepulC.fetchPengepulByUser(); // Fetch user's stores as well
   }
 
   Future<void> _refreshData() async {
     if (isMyShop) {
-      await pengepulC.fetchPengepulByUser();  // Refresh user's store data
+      await pengepulC.fetchPengepulByUser(); // Refresh user's store data
     } else {
-      await pengepulC.fetchPengepul();  // Refresh all store data
+      await pengepulC.fetchPengepul(); // Refresh all store data
     }
   }
 
@@ -100,11 +100,13 @@ class _KopiPageState extends State<KopiPage> {
   // Build the grid of stores
   Widget _buildPengepulGrid() {
     return Obx(() {
-      final pengepulList = isMyShop ? pengepulC.pengepulByUser : pengepulC.pengepul;
+      final pengepulList =
+          isMyShop ? pengepulC.pengepulByUser : pengepulC.pengepul;
 
       if (pengepulList.isEmpty) {
         return const Center(
-          child: Text("Tidak ada data pengepul", style: TextStyle(fontSize: 16)),
+          child:
+              Text("Tidak ada data pengepul", style: TextStyle(fontSize: 16)),
         );
       }
 
@@ -140,7 +142,8 @@ class _KopiPageState extends State<KopiPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: SizedBox(
                 height: 100,
                 width: double.infinity,
@@ -165,7 +168,14 @@ class _KopiPageState extends State<KopiPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildInfoRow('Nama Toko:', item.nama_toko ?? '-', isBold: true),
+                  Text(
+                    '${item.nama_toko}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                
                   _buildInfoRow('Lokasi:', item.alamat ?? '-'),
                   _buildInfoRow(
                     'Harga Beli:',
@@ -184,7 +194,8 @@ class _KopiPageState extends State<KopiPage> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {bool isBold = false, Color? textColor}) {
+  Widget _buildInfoRow(String label, String value,
+      {bool isBold = false, Color? textColor}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

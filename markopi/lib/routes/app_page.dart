@@ -15,6 +15,7 @@ import 'package:markopi/view/Login/login.dart';
 import 'package:markopi/view/Profile/Profile.dart';
 import 'package:markopi/view/DataPengepulUser/UserPengepu.dart';
 import 'package:markopi/view/forum/ForumKomentar.dart';
+import 'package:markopi/view/forum/ForumUser.dart';
 import 'package:markopi/view/forum/ListForum.dart';
 import 'package:markopi/view/Laporan/LaporanPage.dart';
 import 'package:markopi/view/forum/TambahPertanyaan.dart';
@@ -42,6 +43,10 @@ class AppPages {
       page: () => ListForum(),
     ),
 
+    GetPage(
+      name: RouteName.forum + '/forumsaya',
+      page :() => ForumUser(),
+    ),
     GetPage(
       name: '/forum-detail/:id', // Tambahkan route forum
       page: () => ForumKomentar(),

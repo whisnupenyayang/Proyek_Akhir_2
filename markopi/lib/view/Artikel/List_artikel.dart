@@ -24,14 +24,16 @@ class _ListArtikelState extends State<ListArtikel> {
 
     // Menambahkan refresh otomatis ketika halaman pertama kali dibuka
     Future.delayed(Duration.zero, () {
-      artikelC.fetchArtikel(); // Gantilah dengan fungsi yang kamu gunakan untuk mengambil data
+      artikelC
+          .fetchArtikel(); // Gantilah dengan fungsi yang kamu gunakan untuk mengambil data
     });
   }
 
   // Fungsi untuk melakukan refresh
   Future<void> _refreshData() async {
     // Call the function to fetch articles again
-    await artikelC.fetchArtikel(); // Gantilah dengan fungsi yang sesuai untuk mengambil data
+    await artikelC
+        .fetchArtikel(); // Gantilah dengan fungsi yang sesuai untuk mengambil data
     searchC.setArtikel(artikelC.artikel);
   }
 
@@ -39,7 +41,8 @@ class _ListArtikelState extends State<ListArtikel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Informasi Kopi"),
+        title: Text("Artikel"),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -62,7 +65,8 @@ class _ListArtikelState extends State<ListArtikel> {
                 return Center(child: CircularProgressIndicator());
               }
               if (artikelC.errorMessage.isNotEmpty) {
-                return Center(child: Text('Error: ${artikelC.errorMessage.value}'));
+                return Center(
+                    child: Text('Error: ${artikelC.errorMessage.value}'));
               }
               if (searchC.filteredArtikel.isEmpty) {
                 return Center(child: Text('Data artikel kosong'));
@@ -76,7 +80,8 @@ class _ListArtikelState extends State<ListArtikel> {
                     final Artikel artikel = searchC.filteredArtikel[index];
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       child: Card(
                         elevation: 4,
                         shape: RoundedRectangleBorder(
@@ -102,7 +107,8 @@ class _ListArtikelState extends State<ListArtikel> {
                                         height: 180,
                                         width: double.infinity,
                                         color: Colors.grey[300],
-                                        child: Icon(Icons.broken_image, size: 50),
+                                        child:
+                                            Icon(Icons.broken_image, size: 50),
                                       );
                                     },
                                   ),

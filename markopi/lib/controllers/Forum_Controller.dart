@@ -168,41 +168,41 @@ class ForumController extends GetxController {
           komentarForum.value = [];
           Get.snackbar('Error', 'Gagal memproses data komentar: $e');
         }
-      } else {
-        debugPrint('ForumController: Error fetching comments: ${response.statusCode}, ${response.statusText}');
-        Get.snackbar('Error', 'Gagal mengambil komentar');
-      }
+      } 
+      // else {
+      //   debugPrint('ForumController: Error fetching comments: ${response.statusCode}, ${response.statusText}');
+      //   // Get.snackbar('Error', 'Gagal mengambil komentar');
+      // }
     } catch (e, stackTrace) {
       debugPrint('ForumController: Exception during fetchKomentar: $e');
       debugPrint('ForumController: Stack trace: $stackTrace');
-      Get.snackbar('Error', 'Terjadi kesalahan saat mengambil komentar: $e');
+      // Get.snackbar('Error', 'Terjadi kesalahan saat mengambil komentar: $e');
     }
   }
 
-  Future<void> tambahForum(String judul, String description, File image) async {  
-    final String? token = await TokenStorage.getToken();
-    try {
-      if (token == null) {
-        Get.snackbar('Error', 'Token tidak tersedia');
-        return;
-      }
-      final response = await forumProvider.postForum(
-        token: token,
-        judulForum: judul,
-        deskripsiForum: description,
-        imagePath: image.path,
-      );
-     
-     if (response.statusCode == 200) {
-       Get.snackbar("Berhasil", "Pertanyaan Berhasil Di Publish");
-      //  Get.offAllNamed(RouteName.forum);
-     } else {
-       Get.snackbar('Error', 'Gagal menambah forum');
-     }
-    } catch (e) {
-      Get.snackbar('Error', 'Gagal menambah forum: $e');
-    }
+ Future<void> tambahForum(String judul, String description, List<File> images) async {
+  final String? token = await TokenStorage.getToken();
+  if (token == null) {
+    Get.snackbar('Error', 'Token tidak tersedia');
+    return;
   }
+
+
+  final response = await forumProvider.tambahForum(
+    token: token,
+    title: judul,
+    deskripsi: description,
+    gambarFiles: images,
+  );
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    Get.snackbar("Berhasil", "Pertanyaan Berhasil Di Publish");
+    // Get.offAllNamed(RouteName.forum);
+  } else {
+    Get.snackbar('Error', 'Gagal menambah forum');
+  }
+}
+
 
   // Fetching detailed information for a specific forum by id
   Future<void> fetchForumDetail(int id) async {

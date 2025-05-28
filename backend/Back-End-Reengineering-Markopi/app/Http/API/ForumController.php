@@ -36,9 +36,11 @@ class ForumController extends Controller
             $request->validate([
                 'title' => 'required|string',
                 'deskripsi' => 'required|string',
-                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                'gambar' => 'nullable|array',
+                'gambar.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
+            // Ambil ID user yang login
             $id = $request->user()->id_users;
 
             // Membuat forum baru
@@ -48,14 +50,15 @@ class ForumController extends Controller
                 'user_id' => $id,
             ]);
 
-            // Menyimpan gambar jika ada
+            // Menyimpan semua gambar jika ada
             if ($request->hasFile('gambar')) {
-                $file = $request->file('gambar');
-                if ($file->isValid()) {
-                    $gambarPath = $file->store('forumimage', 'public');
-                    $forum->images()->create(['gambar' => $gambarPath]);
-                } else {
-                    return response()->json(['message' => 'File gambar tidak valid', 'status' => 'error'], 400);
+                foreach ($request->file('gambar') as $file) {
+                    if ($file->isValid()) {
+                        $gambarPath = $file->store('forumimage', 'public');
+                        $forum->images()->create([
+                            'gambar' => $gambarPath,
+                        ]);
+                    }
                 }
             }
 
@@ -72,6 +75,7 @@ class ForumController extends Controller
             ], 500);
         }
     }
+
 
     // Menampilkan forum berdasarkan ID
     public function show($id)
@@ -105,8 +109,11 @@ class ForumController extends Controller
     }
 
     // Menampilkan forum berdasarkan user_id
-    public function getForumByUserId($user_id)
+    public function getForumByUserId(Request $request)
     {
+        $user = $request->user();
+
+        $user_id = $user->user_id;
         try {
             $forums = Forum::with('images')->where('user_id', $user_id)->get();
             if ($forums->isEmpty()) {

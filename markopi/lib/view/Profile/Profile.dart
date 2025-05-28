@@ -59,6 +59,7 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
+        centerTitle: true,
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -319,35 +320,40 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                             SizedBox(height: 15),
-                            Container(
-                              width: double.infinity,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color: Colors.black,
-                                          width: 2.0,
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(RouteName.forum +'/forumsaya');
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color: Colors.black,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          'Forum Saya',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Text(
-                                        'Artikel',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                ],
+                                    SizedBox(height: 15),
+                                  ],
+                                ),
                               ),
                             )
                           ],

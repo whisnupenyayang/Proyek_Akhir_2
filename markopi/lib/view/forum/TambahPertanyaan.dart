@@ -20,28 +20,30 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
 
   final ForumController forumController = Get.find();
 
-  File? _pickedImage;
+  List<File> _pickedImages = [];
 
   Future<void> _pickImage() async {
+    if (_pickedImages.length >= 10) {
+      Get.snackbar(
+          'Maksimal Gambar', 'Anda hanya bisa memilih maksimal 10 gambar.');
+      return;
+    }
+
     final picker = ImagePicker();
     final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedFile != null) {
       setState(() {
-        _pickedImage = File(pickedFile.path);
+        _pickedImages.add(File(pickedFile.path));
       });
     }
   }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      if (_pickedImage != null) {
-        forumController.tambahForum(
-            _judulController.text, _deskripsiController.text, _pickedImage!);
-      } else {
-        forumController.tambahForum(
-            _judulController.text, _deskripsiController.text, File(''));
-      }
+      // Kirim list gambar, atau kosongkan jika tidak ada
+      forumController.tambahForum(
+          _judulController.text, _deskripsiController.text, _pickedImages);
     }
   }
 
@@ -87,8 +89,8 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
               TextFormField(
                 controller: _judulController,
                 decoration: const InputDecoration(
-                    labelText: 'isi Pertanyaan anda...',
-                    border: OutlineInputBorder(),
+                  labelText: 'isi Pertanyaan anda...',
+                  border: OutlineInputBorder(),
                 ),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Judul wajib diisi' : null,
@@ -113,13 +115,50 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
                     : null,
               ),
               const SizedBox(height: 16),
-              _pickedImage != null
-                  ? Image.file(_pickedImage!, height: 150)
+
+              // Tampilkan gambar yang sudah dipilih dalam horizontal scroll
+              _pickedImages.isNotEmpty
+                  ? SizedBox(
+                      height: 150,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _pickedImages.length,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(right: 8),
+                                child: Image.file(_pickedImages[index],
+                                    height: 150),
+                              ),
+                              Positioned(
+                                top: 4,
+                                right: 12,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _pickedImages.removeAt(index);
+                                    });
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 14,
+                                    backgroundColor: Colors.black54,
+                                    child: Icon(Icons.close,
+                                        color: Colors.white, size: 18),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    )
                   : const SizedBox(),
+
               TextButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.image),
-                label: const Text('Pilih Gambar (Opsional)'),
+                label: const Text('Pilih Gambar (Maksimal 10)'),
               ),
               const SizedBox(height: 24),
               ElevatedButton(

@@ -70,7 +70,7 @@ Route::get('/forum', [ForumController::class, 'getLimaForum']);
 // Menampilkan detail forum berdasarkan ID
 Route::get('forum/{id}', [ForumController::class, 'show']);
 // Menampilkan forum berdasarkan user_id
-Route::get('user/forum/{user_id}', [ForumController::class, 'getForumByUserId']);
+Route::get('/forum/forumsaya', [ForumController::class, 'getForumByUserId'])->middleware(['auth:sanctum']);
 // Menambahkan forum baru
 Route::post('/forum', [ForumController::class, 'store'])->middleware('auth:sanctum');
 // Menghapus forum berdasarkan ID

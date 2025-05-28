@@ -101,13 +101,11 @@ class ListForum extends StatelessWidget {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              color: const Color(
-                                  0xFFE5F2FF), // Warna latar belakang seperti pada gambar
+                              color: const Color(0xFFE5F2FF),
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
                               child: InkWell(
                                 onTap: () {
-                                  ;
                                   Get.toNamed('/forum-detail/${forum.id}');
                                 },
                                 child: Padding(
@@ -121,13 +119,11 @@ class ListForum extends StatelessWidget {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: Colors
-                                                  .white, // warna latar putih
-                                              shape: BoxShape
-                                                  .circle, // bentuk lingkaran
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
                                             ),
-                                            padding: const EdgeInsets.all(
-                                                8), // jarak antara icon dan tepi lingkaran, bisa disesuaikan
+                                            padding:
+                                                const EdgeInsets.all(8),
                                             child: Icon(
                                               Icons.person,
                                               size: 40,
@@ -149,43 +145,20 @@ class ListForum extends StatelessWidget {
                                               ),
                                               Text(
                                                 forum.tanggal,
-                                                style: const TextStyle(
-                                                    fontSize: 10),
+                                                style:
+                                                    const TextStyle(fontSize: 10),
                                               ),
                                             ],
                                           )
                                         ],
                                       ),
                                       const SizedBox(height: 12),
-                                      // Gambar forum
+
+                                      // Gambar forum dengan indikator halaman
                                       forum.imageUrls.isNotEmpty
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              child: forum.imageUrls.first
-                                                      .isNotEmpty
-                                                  ? Image.network(
-                                                      Connection.buildImageUrl(
-                                                          "storage/${forum.imageUrls.first}"),
-                                                      height: 160,
-                                                      width: double.infinity,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Container(
-                                                      height: 160,
-                                                      width: double.infinity,
-                                                      color: Colors.grey[300],
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: const Icon(
-                                                        Icons
-                                                            .image_not_supported,
-                                                        size: 48,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ),
-                                            )
-                                          : SizedBox.shrink(),
+                                          ? ForumImageSlider(imageUrls: forum.imageUrls)
+                                          : const SizedBox.shrink(),
+
                                       const SizedBox(height: 12),
 
                                       // Judul forum
@@ -250,6 +223,73 @@ class ListForum extends StatelessWidget {
             "Tanya Di Komunitas",
             style: TextStyle(color: Colors.white),
           )),
+    );
+  }
+}
+
+class ForumImageSlider extends StatefulWidget {
+  final List<String> imageUrls;
+
+  const ForumImageSlider({Key? key, required this.imageUrls}) : super(key: key);
+
+  @override
+  State<ForumImageSlider> createState() => _ForumImageSliderState();
+}
+
+class _ForumImageSliderState extends State<ForumImageSlider> {
+  late PageController _pageController;
+  final RxInt _currentPage = 0.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _currentPage.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: widget.imageUrls.length,
+            onPageChanged: (index) {
+              _currentPage.value = index;
+            },
+            itemBuilder: (context, index) {
+              final imageUrl = widget.imageUrls[index];
+              return Image.network(
+                Connection.buildImageUrl("storage/$imageUrl"),
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: Colors.grey[300],
+                  alignment: Alignment.center,
+                  child: const Icon(
+                    Icons.image_not_supported,
+                    size: 48,
+                    color: Colors.grey,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 8),
+        Obx(() => Text(
+              'Gambar ke-${_currentPage.value + 1} dari ${widget.imageUrls.length}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            )),
+      ],
     );
   }
 }

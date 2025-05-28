@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart'; // Import untuk format ribuan
 import 'package:markopi/controllers/Artikel_Controller.dart';
-import 'package:markopi/controllers/Pengepul_Controller.dart'; // Import pengepul controller
+import 'package:markopi/controllers/Pengepul_Controller.dart';
 import 'package:markopi/service/Role_storage.dart';
 import 'package:markopi/service/token_storage.dart';
 import './MainMenu.dart';
 import 'package:markopi/models/Artikel_Model.dart';
-import 'package:markopi/models/Pengepul_Model.dart'; // Import pengepul model
-import 'package:get/get.dart';
+import 'package:markopi/models/Pengepul_Model.dart';
 import 'package:markopi/view/iklan/iklan_banner.dart';
 
 class BerandaBody extends StatefulWidget {
@@ -18,8 +19,7 @@ class BerandaBody extends StatefulWidget {
 
 class _BerandaBodyState extends State<BerandaBody> {
   final ArtikelController artikelC = Get.put(ArtikelController());
-  final PengepulController pengepulC =
-      Get.put(PengepulController()); // Instance pengepul controller
+  final PengepulController pengepulC = Get.put(PengepulController());
 
   bool isLoading = true;
   String? token;
@@ -54,12 +54,8 @@ class _BerandaBodyState extends State<BerandaBody> {
             SizedBox(height: 30),
             MainMenu(),
             SizedBox(height: 30),
-            const Text(
-              'Harga Rata-rata Kopi',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 5),
-            buildHargaRataRata(), // Display average price
+            
+            buildHargaRataRata(),
             SizedBox(height: 10),
             IklanBanner(),
           ],
@@ -68,19 +64,21 @@ class _BerandaBodyState extends State<BerandaBody> {
     );
   }
 
-  // Widget untuk menampilkan harga rata-rata pengepul
   Widget buildHargaRataRata() {
     return Obx(() {
       if (pengepulC.pengepul.isEmpty) {
         return Center(child: CircularProgressIndicator());
       }
 
-      // Menghitung harga rata-rata
       double totalHarga = 0;
       pengepulC.pengepul.forEach((item) {
-        totalHarga += item.harga ?? 0; // Pastikan harga tidak null
+        totalHarga += item.harga?.toDouble() ?? 0;
       });
+
       double hargaRataRata = totalHarga / pengepulC.pengepul.length;
+
+      final formattedHarga =
+          NumberFormat("#,###", "id_ID").format(hargaRataRata.toInt());
 
       return Card(
         elevation: 4,
@@ -88,12 +86,12 @@ class _BerandaBodyState extends State<BerandaBody> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Harga Rata-rata: Rp ${hargaRataRata.toStringAsFixed(2)}',
+                'Harga rata-rata kopi per 1 kg: Rp $formattedHarga',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

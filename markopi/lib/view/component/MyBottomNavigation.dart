@@ -36,6 +36,7 @@ class MyBottomNavigationBar extends StatelessWidget {
       }),
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined, color: Colors.black, size: 40),
@@ -63,7 +64,7 @@ class MyBottomNavigationBar extends StatelessWidget {
           currentIndex: controller.selectedIndex.value,
           selectedItemColor: const Color(0xFF297CBB),
           showSelectedLabels: true,
-          showUnselectedLabels: false,
+          showUnselectedLabels: true,
           onTap: (index) async {
             final token = await TokenStorage.getToken();
             if (index == 0) {

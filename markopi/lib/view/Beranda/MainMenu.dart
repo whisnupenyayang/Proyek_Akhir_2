@@ -11,7 +11,6 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-
   late String? token;
 
   @override
@@ -28,27 +27,27 @@ class _MainMenuState extends State<MainMenu> {
     'assets/images/budidaya_baru.jpg',
     'assets/images/panen_baru.jpg',
     'assets/images/pascapanen_baru.jpg',
-    'assets/images/laporan_baru.jpg',
-    'assets/images/toko_kopi.jpg',
     'assets/images/resepkopi.jpg',
+    'assets/images/toko_kopi.jpg',
+    'assets/images/laporan_baru.jpg',
   ];
 
   final List<String> menuList = [
     'Budidaya',
     'Panen',
     'Pasca_Panen',
-    'Laporan',
-    'Toko_Kopi',
     'Resep_Kopi',
+    'Toko_Kopi',
+    'Laporan',
   ];
 
   final List<String> labelMenu = [
     'Budidaya',
     'Panen',
     'PascaPanen',
-    'Laporan',
-    'Toko Kopi',
     'Resep Kopi',
+    'Toko Kopi',
+    'Laporan',
   ];
 
   List<bool> isPressed = List.generate(6, (_) => false);
@@ -66,7 +65,7 @@ class _MainMenuState extends State<MainMenu> {
       } else if (menuList[index] == 'Laporan') {
         print('Navigasi ke Laporan');
         if (token != null) {
-        Get.toNamed(RouteName.laporan);
+          Get.toNamed(RouteName.laporan);
         } else {
           Get.offAllNamed(RouteName.login);
         }
