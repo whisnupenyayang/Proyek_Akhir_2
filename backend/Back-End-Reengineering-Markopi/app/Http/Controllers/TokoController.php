@@ -64,44 +64,43 @@ class TokoController extends Controller
     // Method to show the edit form
     public function edit($id)
     {
-        $title = 'Edit Toko';  // Set the title
         $toko = Toko::findOrFail($id);
-        return view('admin.toko.edit_toko', compact('toko', 'title'));  // Pass $title and $toko to the view
+        return view('admin.toko.edit', compact('toko'));
     }
 
-    // Method for updating the store data
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'nama_toko' => 'required|string|max:255',
+            'lokasi' => 'required|url',
+            'jam_operasional' => 'required|string|max:255',
+            'foto_toko' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
         $toko = Toko::findOrFail($id);
 
-        if ($request->has('name')) {
-            $toko->nama_toko = $request->name;
-        }
+        $toko->nama_toko = $request->nama_toko;
+        $toko->lokasi = $request->lokasi;
+        $toko->jam_operasional = $request->jam_operasional;
 
-        if ($request->has('lokasi')) {
-            $toko->lokasi = $request->lokasi;
-        }
-
-        if ($request->has('jam_operasional')) {
-            $toko->jam_operasional = $request->jam_operasional;
-        }
-
-        if ($request->has('deskripsi')) {
-            $toko->deskripsi = $request->deskripsi;
-        }
-
-        // Perbarui foto jika ada
         if ($request->hasFile('foto_toko')) {
+            // Simpan gambar baru dan hapus yang lama jika ada
+            if ($toko->foto_toko && file_exists(public_path('images/' . $toko->foto_toko))) {
+                unlink(public_path('images/' . $toko->foto_toko));
+            }
+
             $file = $request->file('foto_toko');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images'), $filename);
+
             $toko->foto_toko = $filename;
         }
 
         $toko->save();
 
-        return response()->json(['success' => true, 'message' => 'Data toko berhasil diperbarui!']);
+        return redirect()->route('toko.detail', $toko->id)->with('success', 'Data toko berhasil diperbarui.');
     }
+
 
     // Method to delete a store
     public function destroy($id)

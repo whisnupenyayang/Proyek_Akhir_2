@@ -139,23 +139,47 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                     );
                   } else if (status == 2) {
-                    return Container(
-                      width: 209,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade500,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Pengajuan Ditolak',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                    // Pengajuan ditolak - tampilkan status dan tombol ajukan ulang
+                    return Column(
+                      children: [
+                        Container(
+                          width: 209,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade500,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Pengajuan Ditolak',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () => Get.to(PengajuanPage()),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            foregroundColor: Colors.white,
+                            minimumSize: Size(209, 40),
+                          ),
+                          child: Text(
+                            'Ajukan Ulang',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   } else {
                     // Belum pernah mengajukan
@@ -322,7 +346,7 @@ class _ProfileViewState extends State<ProfileView> {
                             SizedBox(height: 15),
                             GestureDetector(
                               onTap: () {
-                                Get.toNamed(RouteName.forum +'/forumsaya');
+                                Get.toNamed(RouteName.forum + '/forumsaya');
                               },
                               child: Container(
                                 width: double.infinity,
@@ -343,7 +367,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       child: Padding(
                                         padding: EdgeInsets.all(5),
                                         child: Text(
-                                          'Forum Saya',
+                                          'Postingan Saya',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,

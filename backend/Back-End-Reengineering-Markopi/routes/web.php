@@ -91,6 +91,9 @@ Route::post('/toko', [TokoController::class, 'store'])->name('toko.store');
 Route::get('/toko/{id}', [TokoController::class, 'detailToko'])->name('toko.detail');
 Route::delete('/toko/{id}', [TokoController::class, 'destroy'])->name('toko.destroy');
 Route::post('/toko/store', [TokoController::class, 'store'])->name('toko.store');
+Route::get('/toko/{id}/edit', [TokoController::class, 'edit'])->name('toko.edit');
+Route::put('/toko/{id}', [TokoController::class, 'update'])->name('toko.update');
+
 
 // Artikel Admin
 Route::get('admin/artikel', [ArtikelController::class, 'index'])->name('artikel.index');
@@ -110,6 +113,7 @@ Route::get('/admin/pengepul/{id}', [PengepulController::class, 'show'])->name('p
 Route::get('/admin/pengepul/{id}/edit', [PengepulController::class, 'edit'])->name('admin.pengepul.edit');
 Route::put('/admin/pengepul/{id}/update', [PengepulController::class, 'update'])->name('admin.pengepul.update');
 Route::post('/admin/pengepul/updateField', [PengepulController::class, 'updateField'])->name('admin.pengepul.updateField');
+Route::delete('/admin/pengepul/{id}', [PengepulController::class, 'destroy'])->name('admin.pengepul.destroy');
 
 
 //kegiatan

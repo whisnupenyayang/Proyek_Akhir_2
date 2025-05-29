@@ -4,11 +4,21 @@ import 'package:get/get.dart';
 import 'package:markopi/controllers/Forum_Controller.dart';
 import 'package:markopi/providers/Connection.dart';
 
-class ListForum extends StatelessWidget {
+class ListForum extends StatefulWidget {
+  const ListForum({Key? key}) : super(key: key);
+
+  @override
+  State<ListForum> createState() => _ListForumState();
+}
+
+class _ListForumState extends State<ListForum> {
   final ForumController forumController = Get.put(ForumController());
 
-  ListForum() {
+  @override
+  void initState() {
+    super.initState();
     debugPrint('ListForum: Widget constructed');
+    forumController.fetchForum();
   }
 
   @override
@@ -31,7 +41,6 @@ class ListForum extends StatelessWidget {
           debugPrint(
               'ListForum: Obx rebuild triggered, isLoading=${forumController.isLoading.value}, forumCount=${forumController.forum.length}');
 
-          // Always show search field
           return Column(
             children: [
               Padding(
@@ -117,7 +126,6 @@ class ListForum extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Header: Nama pengguna dan tanggal
                                       Row(
                                         children: [
                                           Container(
@@ -155,16 +163,11 @@ class ListForum extends StatelessWidget {
                                         ],
                                       ),
                                       const SizedBox(height: 12),
-
-                                      // Gambar forum dengan indikator halaman
                                       forum.imageUrls.isNotEmpty
                                           ? ForumImageSlider(
                                               imageUrls: forum.imageUrls)
                                           : const SizedBox.shrink(),
-
                                       const SizedBox(height: 12),
-
-                                      // Judul forum
                                       Text(
                                         forum.judulForum,
                                         style: const TextStyle(
@@ -172,10 +175,7 @@ class ListForum extends StatelessWidget {
                                           fontSize: 16,
                                         ),
                                       ),
-
                                       const SizedBox(height: 6),
-
-                                      // Deskripsi forum
                                       Text(
                                         forum.deskripsiForum,
                                         style: const TextStyle(fontSize: 14),

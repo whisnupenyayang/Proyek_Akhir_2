@@ -121,7 +121,7 @@
                         <img src="{{ asset('Icon/lectern-white.png') }}" alt="Budidaya" width="24" height="24">
                     </i>
                     <p>
-                        Pengajuan Fasilitator
+                        Pengajuan
                     </p>
                 </a>
             </li>

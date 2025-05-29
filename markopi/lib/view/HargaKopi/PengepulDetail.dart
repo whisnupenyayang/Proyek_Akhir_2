@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:markopi/providers/Connection.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailPengepuldanPetani extends StatefulWidget {
   @override
@@ -15,6 +16,8 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
   final PengepulController pengepulC = Get.put(PengepulController());
 
   String? role;
+  bool isOwner = false;
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +25,30 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
     final id = int.tryParse(idStr ?? '') ?? 1;
 
     pengepulC.fetcPengepulDetail(id);
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      role = prefs.getString('role');
+    });
+    
+    // Fetch data pengepul milik user untuk mengecek kepemilikan
+    if (role == 'pengepul') {
+      await pengepulC.fetchPengepulByUser();
+      _checkOwnership();
+    }
+  }
+
+  void _checkOwnership() {
+    final currentDetailId = pengepulC.detailPengepul.value.id;
+    final userPengepulList = pengepulC.pengepulByUser;
+    
+    // Cek apakah detail pengepul yang sedang dilihat ada dalam daftar pengepul milik user
+    setState(() {
+      isOwner = userPengepulList.any((pengepul) => pengepul.id == currentDetailId);
+    });
   }
 
   @override
@@ -35,6 +62,13 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Obx(() {
           var item = pengepulC.detailPengepul.value;
+          
+          // Update ownership check ketika data berubah
+          if (role == 'pengepul') {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _checkOwnership();
+            });
+          }
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,23 +247,24 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
 
               SizedBox(height: 24),
 
-              // Tombol Hapus
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _deletePengepul(item.id);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 14, horizontal: 32),
-                    textStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // Tombol Hapus - Hanya tampil jika user adalah pengepul dan pemilik toko
+              if (role == 'pengepul' && isOwner)
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _deletePengepul(item.id);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 14, horizontal: 32),
+                      textStyle:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    child: Text("Hapus Toko"),
                   ),
-                  child: Text("Hapus Toko"),
                 ),
-              ),
               SizedBox(height: 16),
             ],
           );

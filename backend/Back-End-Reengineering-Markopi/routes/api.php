@@ -70,11 +70,11 @@ Route::get('/forum', [ForumController::class, 'getLimaForum']);
 // Menampilkan detail forum berdasarkan ID
 Route::get('forum/{id}', [ForumController::class, 'show']);
 // Menampilkan forum berdasarkan user_id
-Route::get('/forum/forumsaya', [ForumController::class, 'getForumByUserId'])->middleware(['auth:sanctum']);
+Route::get('/forumsaya', [ForumController::class, 'getForumByUserId'])->middleware(['auth:sanctum']);
 // Menambahkan forum baru
 Route::post('/forum', [ForumController::class, 'store'])->middleware('auth:sanctum');
 // Menghapus forum berdasarkan ID
-Route::delete('forum/{id}', [ForumController::class, 'destroy']);
+Route::delete('forumsaya/{id}', [ForumController::class, 'destroy'])->middleware('auth:sanctum');
 // Menambahkan komentar pada forum
 Route::post('forum/{forum_id}/komentar', [ForumController::class, 'storeComment'])->middleware('auth:sanctum');
 // Mengambil komentar pada forum berdasarkan forum_id

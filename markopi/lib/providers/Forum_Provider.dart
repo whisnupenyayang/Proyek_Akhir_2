@@ -26,7 +26,7 @@ class ForumProvider extends GetConnect {
   request.fields['deskripsi'] = deskripsi;
 
   for (var file in gambarFiles) {
-    var multipartFile = await http.MultipartFile.fromPath('gambar', file.path);
+    var multipartFile = await http.MultipartFile.fromPath('gambar[]', file.path);
     request.files.add(multipartFile);
   }
 
@@ -172,5 +172,13 @@ class ForumProvider extends GetConnect {
       debugPrint('ForumProvider: Stack trace: $stackTrace');
       return Response(statusCode: 500, statusText: e.toString());
     }
+  }
+
+  Future<Response> getForumByuser(String? token) async{
+    return get(Connection.buildUrl('/forumsaya'), headers: {'Authorization': 'Bearer $token'});
+  }
+
+  Future<Response> deleteForumUser(String? token, int? id) async {
+    return delete(Connection.buildUrl('/forumsaya/$id'), headers: {'Authorization': 'Bearer $token'});
   }
 }

@@ -113,12 +113,11 @@ class ForumController extends Controller
     {
         $user = $request->user();
 
-        $user_id = $user->user_id;
+        $user_id = $user->id_users;
         try {
-            $forums = Forum::with('images')->where('user_id', $user_id)->get();
-            if ($forums->isEmpty()) {
-                return response()->json(['message' => 'No forums found for the user', 'status' => 'error'], 404);
-            }
+            
+            $forums = Forum::with('images', 'user')->where('user_id', $user_id)->get();
+            
             return response()->json(['data' => $forums, 'status' => 'success'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to fetch forum', 'status' => 'error', 'error' => $e->getMessage()], 500);
@@ -169,14 +168,22 @@ class ForumController extends Controller
     }
 
     // Menghapus forum berdasarkan ID
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+
+        $user = $request->user();
+        $user_id = $user->id_users;
+
+
         try {
             $forum = Forum::find($id);
             if (!$forum) {
                 return response()->json(['message' => 'Forum not found', 'status' => 'error'], 404);
             }
 
+            if($forum->user_id != $user_id){
+                return response()->json(['message' => ' Anda Tidak Memiliki Akses'], 403);
+            }
             // Menghapus gambar yang terkait dengan forum
             $forum->images->each(function ($image) {
                 Storage::disk('public')->delete($image->gambar);

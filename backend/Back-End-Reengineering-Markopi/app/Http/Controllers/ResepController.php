@@ -76,23 +76,24 @@ class ResepController extends Controller
         return view('admin.resep.edit_resep', compact('resep', 'title'));  // Pass $title and $resep to the view
     }
 
-    // Method to update a recipe
     public function update(Request $request, $id)
     {
         $resep = Resep::findOrFail($id);
 
-        // Update nama and deskripsi if provided
-        if ($request->has('name')) {
-            $resep->nama_resep = $request->name;
-        }
+        // Validasi (opsional, tapi sebaiknya ada)
+        $request->validate([
+            'nama_resep' => 'required|string|max:255',
+            'deskripsi_resep' => 'required|string',
+            'gambar_resep' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        if ($request->has('desc')) {
-            $resep->deskripsi_resep = $request->desc;
-        }
+        // Update nama dan deskripsi
+        $resep->nama_resep = $request->input('nama_resep');
+        $resep->deskripsi_resep = $request->input('deskripsi_resep');
 
-        // Process image if exists
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
+        // Update gambar jika ada
+        if ($request->hasFile('gambar_resep')) {
+            $image = $request->file('gambar_resep');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('images'), $filename);
             $resep->gambar_resep = $filename;
@@ -100,9 +101,6 @@ class ResepController extends Controller
 
         $resep->save();
 
-        return response()->json([
-            'success' => true,
-            'imageUrl' => asset('images/' . $resep->gambar_resep)  // Return the URL of the new image
-        ]);
+        return redirect()->route('admin.resep')->with('success', 'Resep berhasil diperbarui.');
     }
 }

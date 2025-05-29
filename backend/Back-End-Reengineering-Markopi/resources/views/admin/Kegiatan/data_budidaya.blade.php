@@ -21,17 +21,19 @@
 
                                     <!-- Tampilan Default -->
                                     <div id="view-{{ $jenis->id }}">
-                                        <h6>{{ $jenis->judul }}</h6>
-                                        <p>{{ $jenis->deskripsi }}</p>
+                                        <p><strong>Judul:</strong> {{ $jenis->judul }}</p>
+                                        <p><strong>Deskripsi:</strong> {{ $jenis->deskripsi }}</p>
 
                                         @if ($jenis->url_gambar)
                                             <div class="mt-2">
+                                                <strong>Gambar:</strong><br>
                                                 <img src="{{ asset('storage/' . $jenis->url_gambar) }}" alt="Gambar" style="max-width: 200px;">
                                             </div>
                                         @endif
 
                                         @if ($jenis->nama_file)
                                             <div class="mt-2">
+                                                <strong>File:</strong>
                                                 <a href="{{ asset('storage/' . $jenis->nama_file) }}" download>Download File</a>
                                             </div>
                                         @endif

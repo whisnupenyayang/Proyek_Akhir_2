@@ -81,7 +81,7 @@ class PengepulController extends Controller
             'jenis_kopi' => 'required|string|max:100',
             'harga' => 'required|numeric|min:0',
             'nomor_telepon' => 'required|string|max:20',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            'gambar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
 
         $pengepul = Pengepul::findOrFail($id);

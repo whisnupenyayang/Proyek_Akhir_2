@@ -45,6 +45,11 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
       forumController.tambahForum(
           _judulController.text, _deskripsiController.text, _pickedImages);
     }
+    _judulController.clear();
+    _deskripsiController.clear();
+    setState(() {
+      _pickedImages.clear();
+    });
   }
 
   @override
@@ -166,7 +171,7 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
                     backgroundColor: Colors.blue.shade500),
                 onPressed: _submit,
                 child: const Text(
-                  'Selesai',
+                  'Buat Forum',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
