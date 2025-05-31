@@ -18,7 +18,7 @@ class Forum {
     required this.tanggal,
     required this.imageUrls,
     required this.userId,
-    required this.user,
+    required this.user,x
   });
 
   factory Forum.fromJson(Map<String, dynamic> json) {

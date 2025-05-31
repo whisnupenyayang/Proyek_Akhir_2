@@ -23,7 +23,7 @@ class ArtikelController extends GetxController {
       artikel.value = data;
     } catch (e) {
       errorMessage.value = e.toString();
-      Get.snackbar('Error', 'Terjadi kesalahan: $e');
+      Get.snackbar('Tidak dapat mengambil data artikel', 'Cek koneksi internet anda');
     } finally {
       isLoading.value = false;
     }

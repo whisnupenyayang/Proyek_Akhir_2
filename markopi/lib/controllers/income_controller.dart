@@ -39,7 +39,7 @@ class IncomeController extends GetxController {
         Get.snackbar("Error", "Gagal memuat data");
       }
     } catch (e) {
-      Get.snackbar("Error", "Terjadi kesalahan: $e");
+      Get.snackbar('Tidak dapat mengambil data laporan', 'Cek koneksi internet anda');
     } finally {
       isLoading.value = false;
     }

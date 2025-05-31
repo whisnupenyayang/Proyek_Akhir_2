@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Forum_Controller.dart';
-import 'package:markopi/providers/connection.dart';
+import 'package:markopi/providers/Connection.dart';
 
 class ForumUser extends StatefulWidget {
   const ForumUser({super.key});
@@ -13,12 +13,15 @@ class ForumUser extends StatefulWidget {
 class _ForumUserState extends State<ForumUser> {
   final ForumController forumC = Get.put(ForumController());
 
- @override
+  @override
   void initState() {
     super.initState();
-    // Bersihkan data forum dulu tanpa await
     forumC.forum.clear();
     forumC.forumByUser();
+  }
+
+  Future<void> _refreshForum() async {
+    await forumC.forumByUser();
   }
 
   @override
@@ -28,150 +31,160 @@ class _ForumUserState extends State<ForumUser> {
         title: const Text('Postingan Anda'),
       ),
       body: Obx(() {
-        return forumC.isLoading.value
-            ? const Center(child: CircularProgressIndicator())
-            : forumC.forum.isEmpty
-                ? const Center(child: Text('Anda belum memposting apapun.'))
-                : ListView.builder(
+        if (forumC.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (forumC.forum.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: _refreshForum,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [
+                SizedBox(height: 100),
+                Center(child: Text('Anda belum memposting apapun.')),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _refreshForum,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: forumC.forum.length,
+            itemBuilder: (context, index) {
+              final forum = forumC.forum[index];
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                color: const Color(0xFFE5F2FF),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: InkWell(
+                  onTap: () {},
+                  child: Padding(
                     padding: const EdgeInsets.all(12),
-                    itemCount: forumC.forum.length,
-                    itemBuilder: (context, index) {
-                      final forum = forumC.forum[index];
-
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        color: const Color(0xFFE5F2FF),
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Header: Nama pengguna, tanggal, dan titik tiga
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
                               children: [
-                                // Header: Nama pengguna, tanggal, dan titik tiga
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          padding: const EdgeInsets.all(8),
-                                          child: Icon(
-                                            Icons.person,
-                                            size: 40,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              forum.user.namaLengkap,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                            Text(
-                                              forum.tanggal,
-                                              style:
-                                                  const TextStyle(fontSize: 10),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                    PopupMenuButton<String>(
-                                      onSelected: (value) {
-                                        if (value == 'edit') {
-                                          print('Edit forum: ${forum.id}');
-                                        } else if (value == 'hapus') {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: const Text('Hapus Forum'),
-                                              content: const Text(
-                                                  'Apakah Anda yakin ingin menghapus forum ini?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: const Text('Batal'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await forumC
-                                                        .hapusForum(forum.id);
-                                                    await forumC.forumByUser();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text(
-                                                    'Hapus',
-                                                    style: TextStyle(
-                                                        color: Colors.red),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      itemBuilder: (context) => [
-                                        const PopupMenuItem(
-                                          value: 'edit',
-                                          child: Text('Edit'),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 'hapus',
-                                          child: Text('Hapus'),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-
-                                // Gambar forum
-                                forum.imageUrls.isNotEmpty
-                                    ? ForumImageSlider(
-                                        imageUrls: forum.imageUrls)
-                                    : const SizedBox.shrink(),
-
-                                const SizedBox(height: 12),
-
-                                // Judul forum
-                                Text(
-                                  forum.judulForum,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 40,
+                                    color: Colors.grey[700],
                                   ),
                                 ),
-                                const SizedBox(height: 6),
-
-                                // Deskripsi forum
-                                Text(
-                                  forum.deskripsiForum,
-                                  style: const TextStyle(fontSize: 14),
-                                ),
+                                const SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      forum.user.namaLengkap,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Text(
+                                      forum.tanggal,
+                                      style: const TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                )
                               ],
                             ),
+                            PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'edit') {
+                                  print('Edit forum: ${forum.id}');
+                                } else if (value == 'hapus') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Hapus Forum'),
+                                      content: const Text(
+                                          'Apakah Anda yakin ingin menghapus forum ini?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('Batal'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            await forumC.hapusForum(forum.id);
+                                            await forumC.forumByUser();
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'Hapus',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              itemBuilder: (context) => const [
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                PopupMenuItem(
+                                  value: 'hapus',
+                                  child: Text('Hapus'),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Gambar forum
+                        forum.imageUrls.isNotEmpty
+                            ? ForumImageSlider(imageUrls: forum.imageUrls)
+                            : const SizedBox.shrink(),
+
+                        const SizedBox(height: 12),
+
+                        // Judul forum
+                        Text(
+                          forum.judulForum,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                      );
-                    },
-                  );
+                        const SizedBox(height: 6),
+
+                        // Deskripsi forum
+                        Text(
+                          forum.deskripsiForum,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
       }),
     );
   }

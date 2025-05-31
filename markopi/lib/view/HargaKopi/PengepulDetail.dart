@@ -51,6 +51,14 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
     });
   }
 
+  void _showFullScreenImage(BuildContext context, String imageUrl) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FullScreenImageViewer(imageUrl: imageUrl),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,18 +85,21 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: item.nama_gambar != null && item.nama_gambar.isNotEmpty
-                    ? AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: CachedNetworkImage(
-                          imageUrl: Connection.buildImageUrl(item.url_gambar),
-                          width: double.infinity,
-                          fit: BoxFit.contain,
-                          placeholder: (context, url) =>
-                              Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) => Container(
-                            color: Colors.grey[300],
-                            child: Icon(Icons.image_not_supported,
-                                size: 50, color: Colors.grey[600]),
+                    ? GestureDetector(
+                        onTap: () => _showFullScreenImage(context, Connection.buildImageUrl(item.url_gambar)),
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: CachedNetworkImage(
+                            imageUrl: Connection.buildImageUrl(item.url_gambar),
+                            width: double.infinity,
+                            fit: BoxFit.contain,
+                            placeholder: (context, url) =>
+                                Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[300],
+                              child: Icon(Icons.image_not_supported,
+                                  size: 50, color: Colors.grey[600]),
+                            ),
                           ),
                         ),
                       )
@@ -240,7 +251,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Terjadi kesalahan: $e')));
+                        SnackBar(content: Text('Cek koneksi internet anda')));
                   }
                 },
               ),
@@ -329,6 +340,58 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
           ],
         );
       },
+    );
+  }
+}
+
+class FullScreenImageViewer extends StatelessWidget {
+  final String imageUrl;
+  
+  const FullScreenImageViewer({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0,
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          panEnabled: true,
+          boundaryMargin: EdgeInsets.all(20),
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.contain,
+            placeholder: (context, url) => Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+            errorWidget: (context, url, error) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.broken_image,
+                    size: 100,
+                    color: Colors.white54,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Gagal memuat gambar',
+                    style: TextStyle(color: Colors.white54),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

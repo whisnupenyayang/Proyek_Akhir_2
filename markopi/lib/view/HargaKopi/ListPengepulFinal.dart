@@ -57,7 +57,7 @@ class _KopiPageState extends State<KopiPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Ayo!! Temukan harga terbaik untuk Kopi Anda.',
+                'Ayo, temukan harga terbaik untuk kopi Anda.',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),

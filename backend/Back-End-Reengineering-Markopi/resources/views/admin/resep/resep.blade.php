@@ -39,19 +39,38 @@
             margin: 4px 0;
         }
 
-        .btn-detail {
+        /* Ubah tombol detail jadi link selengkapnya */
+        .read-more-link {
             font-size: 14px;
-            color: white;
-            background-color: #007bff;
-            padding: 6px 12px;
-            border-radius: 5px;
+            color: #007bff;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 8px;
+            user-select: none;
         }
 
-        .btn-detail:hover {
-            background-color: #0056b3;
+        .read-more-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Tombol Add (Tambah) bundar seperti contoh artikel */
+        .add-btn {
+            background-color: #004085;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 50%;
+            text-align: center;
+            text-decoration: none;
+            font-size: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-btn:hover {
+            background-color: #003366;
+            color: white;
+            text-decoration: none;
         }
 
         @media (min-width: 768px) {
@@ -102,14 +121,11 @@
             .card-resep-content p {
                 font-size: 13px;
             }
-
-            .btn-detail {
-                font-size: 13px;
-                padding: 5px 10px;
-            }
         }
     </style>
 
+    <!-- Material Icons CDN untuk ikon tambah -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     @if (session('success'))
         <div class="alert alert-success">
@@ -131,14 +147,15 @@
                 <div class="card-resep-content">
                     <h5>{{ $t->nama_resep }}</h5>
                     <p>{{ $t->deskripsi_resep }}</p>
-                    <a href="{{ route('resep.detail', $t->id) }}" class="btn-detail">Detail</a>
+                    <a href="{{ route('resep.detail', ['id' => $t->id, 'kode_toko' => $kode_toko ?? '']) }}" class="read-more-link">Selengkapnya</a>
                 </div>
             </div>
         @endforeach
 
+        {{-- Tombol Add Resep --}}
         <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px; margin-top: 10px;">
-            <a href="{{ route('resep.create') }}" class="btn btn-success">
-                Tambah Resep
+            <a href="{{ route('resep.create', ['kode_toko' => $kode_toko ?? '']) }}" class="add-btn" title="Tambah Resep">
+                <span class="material-icons">add</span>
             </a>
         </div>
     </div>

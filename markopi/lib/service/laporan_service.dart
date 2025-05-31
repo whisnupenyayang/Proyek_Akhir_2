@@ -5,19 +5,15 @@ import '../providers/connection.dart';
 import 'package:markopi/service/token_storage.dart';
 
 class LaporanService {
-  // Endpoint API untuk laporan
   static const String _endpoint = '/laporan/';
 
-  // Fetch semua laporan
   static Future<LaporanResponse> getAllLaporans() async {
     Dio dio = Dio();
     final String? token = await TokenStorage.getToken();
-
     final url = Connection.buildUrl(_endpoint);
-
-    // Print URL for debugging
+    
     print('Fetching from URL: $url');
-
+    
     final response = await dio.get(
       url,
       options: Options(
@@ -28,30 +24,39 @@ class LaporanService {
         },
       ),
     );
-
-    // Print response status code for debugging
+    
     print('Response status code: ${response.statusCode}');
-
+    print('Full response data: ${response.data}'); // Debug full response
+    
     if (response.statusCode == 200) {
       final jsonResponse = response.data;
-
-      final data = jsonResponse['data'];
-
-      return LaporanResponse.fromJson(data);
+      
+      // Debug: Print untuk melihat struktur data
+      print('jsonResponse type: ${jsonResponse.runtimeType}');
+      print('jsonResponse: $jsonResponse');
+      
+      if (jsonResponse['data'] != null) {
+        final data = jsonResponse['data'];
+        print('data type: ${data.runtimeType}');
+        print('data content: $data');
+        
+        // PERBAIKAN: Langsung pass seluruh jsonResponse, bukan hanya 'data'
+        return LaporanResponse.fromJson(jsonResponse);
+      } else {
+        // Jika tidak ada key 'data', return empty response
+        return LaporanResponse(laporan: [], totalProduktifitas: 0);
+      }
     } else {
-      throw Exception(
-          'Failed to load laporan data: Status ${response.statusCode}');
+      throw Exception('Failed to load laporan data: Status ${response.statusCode}');
     }
   }
 
-  // Fetch laporan berdasarkan ID
+  // Method lainnya tetap sama...
   static Future<LaporanDetailKebunModel> getLaporanById(int id) async {
     Dio dio = Dio();
-
     final String? token = await TokenStorage.getToken();
-
     final url = Connection.buildUrl('${_endpoint}detail/$id');
-
+    
     final response = await dio.get(
       url,
       options: Options(
@@ -62,7 +67,7 @@ class LaporanService {
         },
       ),
     );
-
+    
     if (response.statusCode == 200) {
       return LaporanDetailKebunModel.fromJson(response.data);
     } else {
@@ -71,13 +76,11 @@ class LaporanService {
     }
   }
 
-  // Menyimpan laporan baru
   static Future<Response<dynamic>> addLaporan(
       String namaKebun, String lokasi, String luasKebun) async {
     final String? token = await TokenStorage.getToken();
-
     final dio = Dio();
-
+    
     return await dio.post(
       Connection.buildUrl('/laporan/store'),
       data: {

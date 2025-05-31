@@ -53,7 +53,7 @@ class _LaporanPageState extends State<LaporanPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Cek koneksi internet anda'));
           } else if (!snapshot.hasData || snapshot.data!.laporan.isEmpty) {
             return const Center(child: Text('Tidak ada data laporan.'));
           }

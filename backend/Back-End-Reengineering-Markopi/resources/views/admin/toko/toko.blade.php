@@ -2,18 +2,14 @@
 
 @section('content')
     <style>
-        .btn-tambah-wrapper {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: flex-start;
-        }
-
         .toko-container {
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 15px;
             background: white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .card-toko {
@@ -26,11 +22,10 @@
             border-radius: 0;
             width: 100%;
             background: transparent;
-            border-bottom: 1px solid #a5a3a3; /* garis pembatas */
+            border-bottom: 1px solid #a5a3a3;
             padding-bottom: 15px;
         }
 
-        /* Hilangkan garis pembatas untuk card terakhir agar tidak double border */
         .card-toko:last-child {
             border-bottom: none;
             margin-bottom: 0;
@@ -63,19 +58,38 @@
             margin: 4px 0;
         }
 
-        .btn-detail {
+        .read-more-link {
             font-size: 14px;
-            color: white;
-            background-color: #17a2b8;
-            padding: 6px 12px;
-            border-radius: 5px;
+            color: #007bff;
             text-decoration: none;
+            user-select: none;
             display: inline-block;
             margin-top: 8px;
         }
 
-        .btn-detail:hover {
-            background-color: #138496;
+        .read-more-link:hover {
+            text-decoration: underline;
+        }
+
+        .add-btn {
+            background-color: #004085;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 50%;
+            text-align: center;
+            text-decoration: none;
+            font-size: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-btn:hover {
+            background-color: #003366;
+            color: white;
+            text-decoration: none;
         }
 
         @media (min-width: 768px) {
@@ -94,6 +108,10 @@
             .card-toko-content {
                 text-align: left;
                 flex: 1;
+            }
+
+            .read-more-link {
+                font-size: 15px;
             }
         }
 
@@ -127,12 +145,14 @@
                 font-size: 13px;
             }
 
-            .btn-detail {
+            .read-more-link {
                 font-size: 13px;
-                padding: 5px 10px;
             }
         }
     </style>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -141,12 +161,6 @@
     @endif
 
     <div class="container">
-        <div class="btn-tambah-wrapper">
-            <a href="{{ route('toko.create') }}" class="btn btn-primary">
-                Tambah Toko
-            </a>
-        </div>
-
         <div class="toko-container">
             @forelse ($toko as $t)
                 <div class="card-toko">
@@ -162,7 +176,7 @@
                         <h5>{{ $t->nama_toko }}</h5>
                         <p><strong>Lokasi:</strong> {{ $t->lokasi }}</p>
                         <p><strong>Jam Operasional:</strong> {{ $t->jam_operasional }}</p>
-                        <a href="{{ route('toko.detail', $t->id) }}" class="btn-detail">Detail</a>
+                        <a href="{{ route('toko.detail', $t->id) }}" class="read-more-link">Selengkapnya</a>
                     </div>
                 </div>
             @empty
@@ -170,7 +184,13 @@
                     Belum ada data toko.
                 </div>
             @endforelse
+        </div> {{-- Penutup toko-container --}}
 
+        {{-- Tombol Tambah Toko di luar card dan di bawah --}}
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+            <a href="{{ route('toko.create') }}" class="add-btn" title="Tambah Toko">
+                <span class="material-icons">add</span>
+            </a>
         </div>
     </div>
 @endsection

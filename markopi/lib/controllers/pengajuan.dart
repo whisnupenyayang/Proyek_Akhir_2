@@ -11,11 +11,9 @@ class PengajuanController extends GetxController {
   final tipePengajuan = 'fasilitator'.obs;
   final isLoading = false.obs;
   final status = 0.obs;
-
   final fotoKtp = Rx<File?>(null);
   final fotoSelfie = Rx<File?>(null);
   final fotoSertifikat = Rx<File?>(null);
-
   final picker = ImagePicker();
 
   Future<void> pickImage(Rx<File?> target) async {
@@ -40,13 +38,11 @@ class PengajuanController extends GetxController {
           'foto_sertifikat':
               await dio.MultipartFile.fromFile(fotoSertifikat.value!.path),
       });
-
       var response = await PengajuanService.submitPengajuan(formData);
-
       Get.snackbar('Sukses', response['message']);
       Get.to(() => const ProfileView());
     } catch (e) {
-      Get.snackbar('Gagal', 'Terjadi kesalahan saat mengirim pengajuan');
+      Get.snackbar('Tidak dapat mengambil data pengajuan', 'Cek koneksi internet anda');
     } finally {
       isLoading.value = false;
     }

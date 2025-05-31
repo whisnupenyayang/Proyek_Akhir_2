@@ -71,20 +71,8 @@ class _ListForumState extends State<ListForum> {
                     if (forumController.forum.isEmpty &&
                         !forumController.isLoading.value) {
                       debugPrint('ListForum: No forums available to display');
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text('Tidak ada forum tersedia'),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                forumController.refreshForum();
-                              },
-                              child: const Text('Refresh'),
-                            ),
-                          ],
-                        ),
+                      return const Center(
+                        child: Text('Tidak ada forum tersedia'),
                       );
                     }
 
@@ -241,7 +229,6 @@ class ForumImageSlider extends StatefulWidget {
 
 class _ForumImageSliderState extends State<ForumImageSlider> {
   late PageController _pageController;
-  final RxInt _currentPage = 0.obs;
 
   @override
   void initState() {
@@ -252,47 +239,34 @@ class _ForumImageSliderState extends State<ForumImageSlider> {
   @override
   void dispose() {
     _pageController.dispose();
-    _currentPage.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.imageUrls.length,
-            onPageChanged: (index) {
-              _currentPage.value = index;
-            },
-            itemBuilder: (context, index) {
-              final imageUrl = widget.imageUrls[index];
-              return Image.network(
-                Connection.buildImageUrl("storage/$imageUrl"),
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[300],
-                  alignment: Alignment.center,
-                  child: const Icon(
-                    Icons.image_not_supported,
-                    size: 48,
-                    color: Colors.grey,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 8),
-        Obx(() => Text(
-              'Gambar ke-${_currentPage.value + 1} dari ${widget.imageUrls.length}',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            )),
-      ],
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.imageUrls.length,
+        itemBuilder: (context, index) {
+          final imageUrl = widget.imageUrls[index];
+          return Image.network(
+            Connection.buildImageUrl("storage/$imageUrl"),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: Colors.grey[300],
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.image_not_supported,
+                size: 48,
+                color: Colors.grey,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

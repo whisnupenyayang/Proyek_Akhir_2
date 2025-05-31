@@ -1,8 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Autentikasi_Controller.dart';
 import 'package:markopi/models/register_request.dart';
 import 'package:markopi/routes/route_name.dart';
+
+// Custom TextInputFormatter untuk format YYYY-MM-DD
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Hapus semua karakter non-digit
+    String digitsOnly = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    
+    // Batasi maksimal 8 digit (YYYYMMDD)
+    if (digitsOnly.length > 8) {
+      digitsOnly = digitsOnly.substring(0, 8);
+    }
+    
+    String formatted = '';
+    
+    if (digitsOnly.isNotEmpty) {
+      // Format: YYYY
+      if (digitsOnly.length <= 4) {
+        formatted = digitsOnly;
+      }
+      // Format: YYYY-MM
+      else if (digitsOnly.length <= 6) {
+        formatted = '${digitsOnly.substring(0, 4)}-${digitsOnly.substring(4)}';
+      }
+      // Format: YYYY-MM-DD
+      else {
+        formatted = '${digitsOnly.substring(0, 4)}-${digitsOnly.substring(4, 6)}-${digitsOnly.substring(6)}';
+      }
+    }
+    
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -26,6 +66,33 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isLoading = false;
 
+  // Validator untuk tanggal
+  String? _validateDate(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Wajib diisi';
+    }
+    
+    if (value.length != 10) {
+      return 'Format: YYYY-MM-DD';
+    }
+    
+    try {
+      DateTime.parse(value);
+      
+      // Validasi tambahan untuk tahun yang masuk akal
+      final year = int.parse(value.substring(0, 4));
+      final currentYear = DateTime.now().year;
+      
+      if (year < 1900 || year > currentYear) {
+        return 'Tahun tidak valid';
+      }
+      
+      return null;
+    } catch (e) {
+      return 'Tanggal tidak valid';
+    }
+  }
+
   Future<void> _register() async {
     setState(() {
       isLoading = true;
@@ -48,6 +115,23 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  // Fungsi untuk membuka date picker sebagai alternatif
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(2000),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      locale: const Locale('id', 'ID'), // Bahasa Indonesia
+    );
+    
+    if (picked != null) {
+      // Format ke YYYY-MM-DD
+      final formattedDate = '${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+      tanggalLahirController.text = formattedDate;
+    }
   }
 
   @override
@@ -116,12 +200,21 @@ class _RegisterPageState extends State<RegisterPage> {
                 validator: (val) =>
                     val!.length < 6 ? 'Minimal 6 karakter' : null,
               ),
+              
+              // PILIHAN 1: Input dengan formatter otomatis
               TextFormField(
                 controller: tanggalLahirController,
-                decoration:
-                    InputDecoration(labelText: 'Tanggal Lahir (YYYY-MM-DD)'),
-                validator: (val) => val!.isEmpty ? 'Wajib diisi' : null,
+                decoration: InputDecoration(
+                  labelText: 'Tanggal Lahir',
+                  hintText: 'Tahun-Bulan-Hari (contoh: 2005-03-12)',
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  DateInputFormatter(), // Formatter custom
+                ],
+                validator: _validateDate,
               ),
+              
               DropdownButtonFormField<String>(
                 value: jenisKelamin,
                 onChanged: (val) => setState(() => jenisKelamin = val),
@@ -134,15 +227,18 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(
                 controller: provinsiController,
                 decoration: InputDecoration(labelText: 'Provinsi'),
+                validator: (val) => val!.isEmpty ? 'Wajib diisi' : null,
               ),
               TextFormField(
                 controller: kabupatenController,
-                decoration: InputDecoration(labelText: 'Kabupaten'),
+                decoration: InputDecoration(labelText: 'Kabupaten/Kota'),
+                validator: (val) => val!.isEmpty ? 'Wajib diisi' : null,
               ),
               TextFormField(
                 controller: noTelpController,
                 decoration: InputDecoration(labelText: 'No. Telepon'),
                 keyboardType: TextInputType.phone,
+                validator: (val) => val!.isEmpty ? 'Wajib diisi' : null,
               ),
               SizedBox(height: 20),
               ElevatedButton(
@@ -163,7 +259,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: isLoading
                     ? CircularProgressIndicator(
                         color: Colors.white,
-                        padding: EdgeInsets.symmetric(vertical: 10),
                       )
                     : Text("Daftar", style: TextStyle(color: Colors.white)),
               ),

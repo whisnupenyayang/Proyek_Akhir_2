@@ -1,9 +1,9 @@
 class Connection {
   static const String apiUrl =
       // 'https://www.markopi.cloud/api'; // URL API Laravel yang sudah di-hosting
-    // 'http://192.168.53.244:8000/api'; // URL API Andoroid
+   //  'http://192.168.53.244:8000/api'; // URL API Andoroid
   //'http://10.0.2.2:8000/api'; // URL API Laravel local
-    'https://markopi.d4trpl-itdel.id/api';
+     'https://markopi.d4trpl-itdel.id/api';
 
   // Fungsi untuk menggabungkan URL API dengan endpoint tertentu
   static String buildUrl(String endpoint) {

@@ -12,61 +12,63 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<MyAppBar> createState() => _MyAppBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(60);
+  Size get preferredSize => const Size.fromHeight(60); // Menentukan tinggi AppBar.
 }
 
 class _MyAppBarState extends State<MyAppBar> {
-  final userStorage = UserStorage();
-  UserModel? _user;
+  final userStorage = UserStorage(); // Untuk mengakses data pengguna.
+  UserModel? _user; // Menyimpan data pengguna yang diambil.
 
-  String? token;
-  bool isLoading = true;
+  String? token; // Menyimpan token pengguna yang diambil.
+  bool isLoading = true; // Menyimpan status loading.
 
   @override
   void initState() {
     super.initState();
-    _loadToken();
+    _loadToken(); // Memanggil fungsi untuk memuat token saat halaman dimulai.
   }
 
+  // Fungsi untuk mengambil token dan data pengguna.
   Future<void> _loadToken() async {
-    final result = await TokenStorage.getToken();
-    await userStorage.openBox();
-    final user = userStorage.getUser();
+    final result = await TokenStorage.getToken(); // Mengambil token yang disimpan.
+    await userStorage.openBox(); // Membuka penyimpanan data pengguna.
+    final user = userStorage.getUser(); // Mengambil data pengguna.
     setState(() {
       _user = user;
       token = result;
-      isLoading = false;
+      isLoading = false; // Menandakan bahwa data sudah dimuat.
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return const SizedBox.shrink();
+    // Menunggu sampai data selesai dimuat sebelum menampilkan AppBar.
+    if (isLoading) return const SizedBox.shrink(); // Menyembunyikan AppBar saat loading.
 
     return AppBar(
-      toolbarHeight: 60,
+      toolbarHeight: 60, // Menentukan tinggi AppBar.
       titleSpacing: 10,
-      backgroundColor: Colors.white,
-      elevation: 1,
+      backgroundColor: Colors.white, // Warna latar belakang AppBar.
+      elevation: 1, // Menambahkan bayangan pada AppBar.
       title: Row(
         children: [
-          const Icon(Icons.account_circle, size: 50),
-          const SizedBox(width: 12),
+          const Icon(Icons.account_circle, size: 50), // Ikon profil pengguna.
+          const SizedBox(width: 12), // Jarak antara ikon dan teks.
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, // Menyusun teks di tengah.
+              crossAxisAlignment: CrossAxisAlignment.start, // Menyusun teks ke kiri.
               children: [
                 Text(
-                  _user?.namaLengkap ?? 'Pengunjung',
+                  _user?.namaLengkap ?? 'Pengunjung', // Menampilkan nama pengguna atau 'Pengunjung'.
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (_user?.namaLengkap == null)
+                if (_user?.namaLengkap == null) // Jika pengguna belum login.
                   const Text(
-                    'Anda belum login',
+                    'Anda belum login', // Pesan jika pengguna belum login.
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.grey,
@@ -75,18 +77,18 @@ class _MyAppBarState extends State<MyAppBar> {
               ],
             ),
           ),
-          if (token == null)
+          if (token == null) // Jika token belum ada, tampilkan tombol masuk dan register.
             Row(
               spacing: 10,
               children: [
+                // Tombol untuk masuk
                 InkWell(
-                  onTap: () => Get.toNamed(RouteName.login),
+                  onTap: () => Get.toNamed(RouteName.login), // Navigasi ke halaman login.
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2696D6),
-                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFF2696D6), // Warna latar tombol.
+                      borderRadius: BorderRadius.circular(8), // Menambahkan sudut melengkung.
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
@@ -96,7 +98,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       ],
                     ),
                     child: const Text(
-                      'Masuk',
+                      'Masuk', // Teks tombol 'Masuk'.
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -105,14 +107,14 @@ class _MyAppBarState extends State<MyAppBar> {
                     ),
                   ),
                 ),
+                // Tombol untuk register
                 InkWell(
-                  onTap: () => Get.toNamed(RouteName.register),
+                  onTap: () => Get.toNamed(RouteName.register), // Navigasi ke halaman register.
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2696D6),
-                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFF2696D6), // Warna latar tombol.
+                      borderRadius: BorderRadius.circular(8), // Menambahkan sudut melengkung.
                       boxShadow: const [
                         BoxShadow(
                           color: Colors.black26,
@@ -122,7 +124,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       ],
                     ),
                     child: const Text(
-                      'Register',
+                      'Register', // Teks tombol 'Register'.
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

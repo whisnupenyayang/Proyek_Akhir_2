@@ -5,36 +5,71 @@ import 'package:http_parser/http_parser.dart';
 import 'package:get/get.dart';
 import 'package:markopi/providers/Connection.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:io';
 
 class ForumProvider extends GetConnect {
   final String url = '/forum'; // API endpoint for forums
   
   // Method for posting a new forum (with multipart for images)
-  Future<http.Response> tambahForum({
-  required String token,
-  required String title,
-  required String deskripsi,
-  required List<File> gambarFiles,
-}) async {
-  var uri = Uri.parse(Connection.buildUrl('/forum'));
+  Future<Response> postForum({
+    required String token,
+    required String judulForum,
+    required String deskripsiForum,
+    String? imagePath,
+  }) async {
+    debugPrint('ForumProvider: postForum called with title: $judulForum');
+    final String apiUrl = Connection.buildUrl(url);
+    debugPrint('ForumProvider: API URL for posting forum: $apiUrl');
+    
+    var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+    request.headers['Authorization'] = 'Bearer $token';
+    
+    // Add text fields
+    request.fields['title'] = judulForum;
+    request.fields['deskripsi'] = deskripsiForum;
 
-  var request = http.MultipartRequest('POST', uri);
-  request.headers['Authorization'] = 'Bearer $token';
-
-  request.fields['title'] = title;
-  request.fields['deskripsi'] = deskripsi;
-
-  for (var file in gambarFiles) {
-    var multipartFile = await http.MultipartFile.fromPath('gambar[]', file.path);
-    request.files.add(multipartFile);
+    
+    // Add image file if provided
+    if (imagePath != null && imagePath.isNotEmpty) {
+      debugPrint('ForumProvider: Adding image from path: $imagePath');
+      try {
+        final mimeType = lookupMimeType(imagePath) ?? 'application/octet-stream';
+        debugPrint('ForumProvider: Image MIME type: $mimeType');
+        
+        request.files.add(await http.MultipartFile.fromPath(
+          'gambar', // Field name for the image in the API
+          imagePath,
+          contentType: MediaType.parse(mimeType),
+        ));
+        debugPrint('ForumProvider: Image file added to request');
+      } catch (e) {
+        debugPrint('ForumProvider: Error adding image to request: $e');
+      }
+    }
+    
+    try {
+      debugPrint('ForumProvider: Sending forum creation request');
+      // Send the multipart request
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      
+      debugPrint('ForumProvider: Forum creation response status: ${response.statusCode}');
+      debugPrint('ForumProvider: Forum creation response body: ${response.body}');
+      
+      // Convert the response to GetConnect's Response format
+      return Response(
+        statusCode: response.statusCode,
+        body: jsonDecode(response.body),
+        statusText: response.statusCode == 200 || response.statusCode == 201
+            ? 'Success'
+            : 'Failed',
+      );
+    } catch (e, stackTrace) {
+      debugPrint('ForumProvider: Error during forum creation: $e');
+      debugPrint('ForumProvider: Stack trace: $stackTrace');
+      // Handle any errors during the request
+      return Response(statusCode: 500, statusText: e.toString());
+    }
   }
-
-  var streamedResponse = await request.send();
-  var response = await http.Response.fromStream(streamedResponse);
-  return response;
-}
-
   
   // Fetch forum list with pagination
   Future<Response> getForum(int page, String? token) async {
@@ -173,8 +208,7 @@ class ForumProvider extends GetConnect {
       return Response(statusCode: 500, statusText: e.toString());
     }
   }
-
-  Future<Response> getForumByuser(String? token) async{
+   Future<Response> getForumByuser(String? token) async{
     return get(Connection.buildUrl('/forumsaya'), headers: {'Authorization': 'Bearer $token'});
   }
 

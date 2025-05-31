@@ -36,11 +36,9 @@ class ForumController extends Controller
             $request->validate([
                 'title' => 'required|string',
                 'deskripsi' => 'required|string',
-                'gambar' => 'nullable|array',
-                'gambar.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+                'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
-            // Ambil ID user yang login
             $id = $request->user()->id_users;
 
             // Membuat forum baru
@@ -50,15 +48,14 @@ class ForumController extends Controller
                 'user_id' => $id,
             ]);
 
-            // Menyimpan semua gambar jika ada
+            // Menyimpan gambar jika ada
             if ($request->hasFile('gambar')) {
-                foreach ($request->file('gambar') as $file) {
-                    if ($file->isValid()) {
-                        $gambarPath = $file->store('forumimage', 'public');
-                        $forum->images()->create([
-                            'gambar' => $gambarPath,
-                        ]);
-                    }
+                $file = $request->file('gambar');
+                if ($file->isValid()) {
+                    $gambarPath = $file->store('forumimage', 'public');
+                    $forum->images()->create(['gambar' => $gambarPath]);
+                } else {
+                    return response()->json(['message' => 'File gambar tidak valid', 'status' => 'error'], 400);
                 }
             }
 
@@ -75,7 +72,6 @@ class ForumController extends Controller
             ], 500);
         }
     }
-
 
     // Menampilkan forum berdasarkan ID
     public function show($id)
@@ -108,21 +104,28 @@ class ForumController extends Controller
         }
     }
 
-    // Menampilkan forum berdasarkan user_id
+     // Menampilkan forum berdasarkan user_id
     public function getForumByUserId(Request $request)
-    {
-        $user = $request->user();
+{
+    $user = $request->user();
+    $user_id = $user->id_users;
 
-        $user_id = $user->id_users;
-        try {
-            
-            $forums = Forum::with('images', 'user')->where('user_id', $user_id)->get();
-            
-            return response()->json(['data' => $forums, 'status' => 'success'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to fetch forum', 'status' => 'error', 'error' => $e->getMessage()], 500);
-        }
+    try {
+        $forums = Forum::with('images', 'user')->where('user_id', $user_id)->get();
+
+        return response()->json([
+            'data' => ForumResource::collection($forums),
+            'status' => 'success'
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to fetch forum',
+            'status' => 'error',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     // Mengupdate forum berdasarkan ID
     public function update(Request $request, $id)

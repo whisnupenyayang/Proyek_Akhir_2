@@ -22,7 +22,7 @@ class PengepulController extends GetxController {
       final List<dynamic> data = response.body;
       pengepul.value = data.map((e) => Pengepul.fromJson(e)).toList();
     } else {
-      Get.snackbar('Error', 'Gagal mengambil data pengepul');
+      Get.snackbar('Tidak dapat mengambil data pengepul', 'Cek koneksi internet anda');
     }
   }
 
@@ -40,7 +40,7 @@ class PengepulController extends GetxController {
       final List<dynamic> data = response.body;
       pengepulByUser.value = data.map((e) => Pengepul.fromJson(e)).toList();
     } else {
-      Get.snackbar('Error', 'Gagal mengambil data pengepul milik pengguna');
+      Get.snackbar('Tidak dapat mengambil data pengepul', 'Cek koneksi internet anda');
     }
   }
 
@@ -52,7 +52,7 @@ class PengepulController extends GetxController {
       Map<String, dynamic> data = response.body;
       detailPengepul.value = Pengepul.fromJson(data);
     } else {
-      Get.snackbar('Error', 'Gagal mengambil detail pengepul');
+      Get.snackbar('Tidak dapat mengambil data pengepul', 'Cek koneksi internet anda');
     }
   }
 
@@ -162,7 +162,7 @@ class PengepulController extends GetxController {
       rataRataHargaKopi.value =
           data.map((e) => RataRataHargakopi.fromJson(e)).toList();
     } else {
-      Get.snackbar('Error', 'Gagal mengambil data');
+      Get.snackbar('Tidak dapat mengambil data pengepul', 'Cek koneksi internet anda');
     }
   }
 }

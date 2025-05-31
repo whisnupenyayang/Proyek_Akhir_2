@@ -133,7 +133,6 @@ Route::get('/pengajuan/detail/{id}', [TransaksiApiController::class, 'pengajuanD
 Route::get('/pengajuandalamdata', [TransaksiApiController::class, 'getPengajuanbyData'])->middleware(['auth:sanctum']);
 Route::delete('/pengepul/{id}', [PengepulApiController::class, 'deletePengepul'])->middleware('auth:sanctum');
 
-
 //toko
 Route::get('/tokos', [TokoApiController::class, 'index']);  // Mengambil semua toko
 Route::get('/tokos/{id}', [TokoApiController::class, 'show']);  // Mengambil toko berdasarkan ID

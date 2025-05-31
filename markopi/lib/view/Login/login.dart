@@ -30,6 +30,10 @@ class _LoginViewState extends State<LoginView> {
         toolbarHeight: 88,
         titleSpacing: 20,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Get.offAllNamed(RouteName.beranda),
+        ),
         title: const Text("Masuk"),
       ),
       body: Padding(

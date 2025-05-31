@@ -20,36 +20,29 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
 
   final ForumController forumController = Get.find();
 
-  List<File> _pickedImages = [];
+  File? _pickedImage;
 
   Future<void> _pickImage() async {
-    if (_pickedImages.length >= 10) {
-      Get.snackbar(
-          'Maksimal Gambar', 'Anda hanya bisa memilih maksimal 10 gambar.');
-      return;
-    }
-
     final picker = ImagePicker();
     final pickedFile =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedFile != null) {
       setState(() {
-        _pickedImages.add(File(pickedFile.path));
+        _pickedImage = File(pickedFile.path);
       });
     }
   }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      // Kirim list gambar, atau kosongkan jika tidak ada
-      forumController.tambahForum(
-          _judulController.text, _deskripsiController.text, _pickedImages);
+      if (_pickedImage != null) {
+        forumController.tambahForum(
+            _judulController.text, _deskripsiController.text, _pickedImage!);
+      } else {
+        forumController.tambahForum(
+            _judulController.text, _deskripsiController.text, File(''));
+      }
     }
-    _judulController.clear();
-    _deskripsiController.clear();
-    setState(() {
-      _pickedImages.clear();
-    });
   }
 
   @override
@@ -94,8 +87,8 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
               TextFormField(
                 controller: _judulController,
                 decoration: const InputDecoration(
-                  labelText: 'isi Pertanyaan anda...',
-                  border: OutlineInputBorder(),
+                    labelText: 'isi Pertanyaan anda...',
+                    border: OutlineInputBorder(),
                 ),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Judul wajib diisi' : null,
@@ -120,50 +113,13 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
                     : null,
               ),
               const SizedBox(height: 16),
-
-              // Tampilkan gambar yang sudah dipilih dalam horizontal scroll
-              _pickedImages.isNotEmpty
-                  ? SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _pickedImages.length,
-                        itemBuilder: (context, index) {
-                          return Stack(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(right: 8),
-                                child: Image.file(_pickedImages[index],
-                                    height: 150),
-                              ),
-                              Positioned(
-                                top: 4,
-                                right: 12,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _pickedImages.removeAt(index);
-                                    });
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 14,
-                                    backgroundColor: Colors.black54,
-                                    child: Icon(Icons.close,
-                                        color: Colors.white, size: 18),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    )
+              _pickedImage != null
+                  ? Image.file(_pickedImage!, height: 150)
                   : const SizedBox(),
-
               TextButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.image),
-                label: const Text('Pilih Gambar (Maksimal 10)'),
+                label: const Text('Pilih Gambar (Opsional)'),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -171,7 +127,7 @@ class _TambahPertanyaanState extends State<TambahPertanyaan> {
                     backgroundColor: Colors.blue.shade500),
                 onPressed: _submit,
                 child: const Text(
-                  'Buat Forum',
+                  'Selesai',
                   style: TextStyle(color: Colors.white),
                 ),
               ),

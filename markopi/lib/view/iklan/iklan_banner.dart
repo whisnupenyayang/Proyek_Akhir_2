@@ -81,7 +81,7 @@ class _IklanBannerState extends State<IklanBanner> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Temukkan Kebutuhan tanaman anda',
+          'Temukan kebutuhan tanaman anda',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -93,7 +93,7 @@ class _IklanBannerState extends State<IklanBanner> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(child: Text('Cek koneksi internet anda'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('Tidak ada data iklan.'));
               } else {

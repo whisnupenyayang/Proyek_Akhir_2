@@ -414,7 +414,6 @@ class ForumImageSlider extends StatefulWidget {
 
 class _ForumImageSliderState extends State<ForumImageSlider> {
   late PageController _pageController;
-  final RxInt _currentPage = 0.obs;
 
   @override
   void initState() {
@@ -425,51 +424,38 @@ class _ForumImageSliderState extends State<ForumImageSlider> {
   @override
   void dispose() {
     _pageController.dispose();
-    _currentPage.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: widget.imageUrls.length,
-            onPageChanged: (index) {
-              _currentPage.value = index;
-            },
-            itemBuilder: (context, index) {
-              final imageUrl = Connection.buildImageUrl(
-                  "storage/${widget.imageUrls[index]}");
-              return GestureDetector(
-                onTap: () => widget.onTapImage(imageUrl),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: Colors.grey[300],
-                    alignment: Alignment.center,
-                    child: const Icon(
-                      Icons.image_not_supported,
-                      size: 48,
-                      color: Colors.grey,
-                    ),
-                  ),
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.imageUrls.length,
+        itemBuilder: (context, index) {
+          final imageUrl = Connection.buildImageUrl(
+              "storage/${widget.imageUrls[index]}");
+          return GestureDetector(
+            onTap: () => widget.onTapImage(imageUrl),
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey[300],
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.image_not_supported,
+                  size: 48,
+                  color: Colors.grey,
                 ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 8),
-        Obx(() => Text(
-              'Gambar ke-${_currentPage.value + 1} dari ${widget.imageUrls.length}',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            )),
-      ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -197,26 +197,27 @@ class ForumController extends GetxController {
     }
   }
 
-  Future<void> tambahForum(
-      String judul, String description, List<File> images) async {
+  Future<void> tambahForum(String judul, String description, File image) async {  
     final String? token = await TokenStorage.getToken();
-    if (token == null) {
-      Get.snackbar('Error', 'Token tidak tersedia');
-      return;
-    }
-
-    final response = await forumProvider.tambahForum(
-      token: token,
-      title: judul,
-      deskripsi: description,
-      gambarFiles: images,
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.snackbar("Berhasil", "Pertanyaan Berhasil Di Publish");
-      // Get.offAllNamed(RouteName.forum);
-    } else {
-      Get.snackbar('Error', 'Gagal menambah forum');
+    try {
+      if (token == null) {
+        Get.snackbar('Error', 'Token tidak tersedia');
+        return;
+      }
+      final response = await forumProvider.postForum(
+        token: token,
+        judulForum: judul,
+        deskripsiForum: description,
+        imagePath: image.path,
+      );
+     
+     if (response.statusCode == 200) {
+       Get.snackbar("Berhasil", "Pertanyaan Berhasil Di Publish");
+     } else {
+       Get.snackbar('Error', 'Gagal menambah forum');
+     }
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal menambah forum: $e');
     }
   }
 
@@ -266,32 +267,45 @@ class ForumController extends GetxController {
       } else {
         debugPrint(
             'ForumController: Error fetching forum detail: ${response.statusCode}, ${response.statusText}');
-        Get.snackbar('Error', 'Gagal mengambil detail forum');
+        Get.snackbar('Tidak dapat mengambil data forum', 'Cek koneksi internet anda');
       }
     } catch (e, stackTrace) {
       debugPrint('ForumController: Exception during fetchForumDetail: $e');
       debugPrint('ForumController: Stack trace: $stackTrace');
       Get.snackbar(
-          'Error', 'Terjadi kesalahan saat mengambil detail forum: $e');
+          'Tidak dapat mengambil data forum', 'Cek koneksi internet anda');
     }
   }
 
-  Future<void> forumByUser() async {
-    isLoading.value = true;
-    debugPrint('ForumController: Getting token');
-    final String? token = await TokenStorage.getToken();
+ Future<void> forumByUser() async {
+  isLoading.value = true;
+  debugPrint('ForumController: Getting token');
+  
+  final String? token = await TokenStorage.getToken();
 
+  try {
     final response = await forumProvider.getForumByuser(token);
+    debugPrint('ForumController: Response ${response.statusCode}, ${response.body}');
+
     if (response.statusCode == 200) {
       final List<dynamic> data = response.body['data'];
-      forum.value = data.map((item) => Forum.fromJson(item)).toList();
-      print(forum.value);
+      
+      // Sesuaikan parsing berdasarkan struktur dari ForumResource
+      final List<Forum> newForums = data.map((item) => Forum.fromJson(item)).toList();
+      
+      forum.value = newForums;
+      debugPrint('ForumController: Loaded ${newForums.length} forums for user');
     } else {
-      Get.snackbar('Error', response.body['message']);
+      Get.snackbar('Error', response.body['message'] ?? 'Gagal memuat forum');
     }
-      isLoading.value = false;
-
+  } catch (e) {
+    Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    debugPrint('ForumController: Exception $e');
+  } finally {
+    isLoading.value = false;
   }
+}
+
 
   Future<void> hapusForum(int? id) async {
     final String? token = await TokenStorage.getToken();

@@ -77,12 +77,27 @@
         margin-top: 15px;
     }
 
-    .btn-tambah {
-        margin-top: 20px;
-        text-align: right;
+    .add-btn {
+        background-color: #004085;
+        color: white;
+        padding: 10px 14px;
+        border-radius: 50%;
+        text-align: center;
+        text-decoration: none;
+        font-size: 24px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Responsive */
+    .add-btn:hover {
+        background-color: #003366;
+        color: white;
+        text-decoration: none;
+    }
+
     @media (max-width: 768px) {
         .card {
             padding: 10px;
@@ -98,7 +113,6 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 4px;
-            /* dari 8px jadi 4px */
             color: #333;
         }
 
@@ -111,12 +125,7 @@
 
         .text-link {
             font-size: 14px;
-            color: #007bff;
-            text-decoration: none;
-            display: inline-block;
             margin-top: 2px;
-            /* dari 4px jadi 2px */
-            word-break: break-word;
         }
 
         .btn-container {
@@ -125,6 +134,9 @@
         }
     }
 </style>
+
+<!-- Material Icons CDN -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script>
     function toggleEdit(id) {
@@ -138,6 +150,7 @@
 
         if (moreText.style.display === 'inline') {
             moreText.style.display = 'none';
+            button.innerText = 'Selengkapnya';
         } else {
             moreText.style.display = 'inline';
             button.innerText = 'Tutup';
@@ -160,6 +173,7 @@
                     <span id="more-text-{{ $iklan->id }}" style="display: none;">
                         {{ substr($iklan->deskripsi_iklan, 10) }}
                     </span>
+                    <span class="show-more" id="show-more-{{ $iklan->id }}" onclick="toggleDescription({{ $iklan->id }})">Selengkapnya</span>
                     @endif
                 </p>
 
@@ -168,7 +182,7 @@
                     @php
                     $link = trim($iklan->link);
                     if ($link && !preg_match('/^https?:\/\//', $link)) {
-                    $link = 'http://' . $link;
+                        $link = 'http://' . $link;
                     }
                     @endphp
 
@@ -179,10 +193,7 @@
                     @else
                     <span class="text-muted">Tidak ada link</span>
                     @endif
-
-                    <br>
                 </p>
-
 
                 <div class="btn-container">
                     <button onclick="toggleEdit({{ $iklan->id }})" class="btn btn-warning btn-sm">Edit</button>
@@ -223,9 +234,10 @@
         <div class="text-center text-muted">Belum ada data iklan.</div>
         @endforelse
 
-        <div class="btn-tambah">
-            <a href="{{ route('iklan.create') }}" class="btn btn-success">
-                <span class="material-icons">add</span> Tambah Iklan
+        {{-- Tombol Add Iklan --}}
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
+            <a href="{{ route('iklan.create') }}" class="add-btn" title="Tambah Iklan">
+                <span class="material-icons">add</span>
             </a>
         </div>
     </section>

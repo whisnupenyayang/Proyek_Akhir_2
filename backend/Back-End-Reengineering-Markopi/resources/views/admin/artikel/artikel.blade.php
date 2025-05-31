@@ -123,40 +123,33 @@
             padding: 15px;
         }
 
-    .btn-tambah-artikel {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #007bff;
-        color: #fff;
-        padding: 8px 14px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: 500;
-        transition: background-color 0.3s;
-        border: none;
-    }
+        /* Add Button Style - sama seperti di kode iklan */
+        .add-btn {
+            background-color: #004085;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 50%;
+            text-align: center;
+            text-decoration: none;
+            font-size: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .btn-tambah-artikel:hover {
-        background-color: #0056b3;
-        color: #fff;
-    }
-
+        .add-btn:hover {
+            background-color: #003366;
+            color: white;
+            text-decoration: none;
+        }
     </style>
 
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <div class="container-artikel">
-
-     {{-- Tombol Tambah Artikel di luar border, pojok kiri atas --}}
-    <div style="display: flex; justify-content: flex-start; margin-bottom: 10px;">
-        <a href="{{ route('artikel.create') }}" class="btn-tambah-artikel">
-            <span class="material-icons" style="margin-right: 6px;">add</span> Tambah Artikel
-        </a>
-    </div>
-
-
-    {{-- Kotak Artikel dengan Border --}}
-    <div style="border: 1px solid #ccc; border-radius: 10px; padding: 20px; background: #fefefe;">
         @if ($artikels->isEmpty())
             <div style="text-align: center; color: #666; font-size: 18px; padding: 40px 0;">
                 Belum ada artikel.
@@ -180,9 +173,13 @@
                 </div>
             @endforeach
         @endif
+        
+        {{-- Tombol Add Artikel --}}
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 20px;">
+            <a href="{{ route('artikel.create') }}" class="add-btn" title="Tambah Artikel">
+                <span class="material-icons">add</span>
+            </a>
+        </div>
     </div>
-</div>
-
-
 
 @endsection

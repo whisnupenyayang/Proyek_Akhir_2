@@ -60,19 +60,6 @@ class _ProfileViewState extends State<ProfileView> {
       appBar: AppBar(
         title: Text('Profile'),
         centerTitle: true,
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'edit') {}
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem<String>(
-                value: 'edit',
-                child: Text('Edit Profil'),
-              ),
-            ],
-          ),
-        ],
       ),
       body: Container(
         width: double.infinity,
@@ -139,47 +126,24 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                     );
                   } else if (status == 2) {
-                    // Pengajuan ditolak - tampilkan status dan tombol ajukan ulang
-                    return Column(
-                      children: [
-                        Container(
-                          width: 209,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.red.shade500,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Pengajuan Ditolak',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                    // Pengajuan ditolak - hanya tampilkan status saja
+                    return Container(
+                      width: 209,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade500,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Pengajuan Ditolak',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () => Get.to(PengajuanPage()),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            foregroundColor: Colors.white,
-                            minimumSize: Size(209, 40),
-                          ),
-                          child: Text(
-                            'Ajukan Ulang',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     );
                   } else {
                     // Belum pernah mengajukan
@@ -296,53 +260,12 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     SizedBox(height: 15),
                     GestureDetector(
-                      onTap: () {
-                        if (role == 'pengepul') {
-                          Get.toNamed(RouteName.profile + '/datapengepul');
-                        } else {
-                          if (!_isSnackbarActive) {
-                            _isSnackbarActive = true;
-                            Get.snackbar(
-                              'Akses Ditolak',
-                              'Anda bukan pengepul, tidak bisa membuka Data Pengepul',
-                              backgroundColor: Colors.redAccent,
-                              colorText: Colors.white,
-                              snackPosition: SnackPosition.BOTTOM,
-                              duration: Duration(seconds: 3),
-                            );
-                            Future.delayed(Duration(seconds: 3), () {
-                              _isSnackbarActive = false;
-                            });
-                          }
-                        }
-                      },
                       child: Container(
                         width: double.infinity,
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: Colors.black,
-                                    width: 2.0,
-                                  ),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  'Data Pengepul',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
                             SizedBox(height: 15),
                             GestureDetector(
                               onTap: () {
