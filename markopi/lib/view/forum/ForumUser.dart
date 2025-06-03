@@ -109,9 +109,7 @@ class _ForumUserState extends State<ForumUser> {
                             ),
                             PopupMenuButton<String>(
                               onSelected: (value) {
-                                if (value == 'edit') {
-                                  print('Edit forum: ${forum.id}');
-                                } else if (value == 'hapus') {
+                                if (value == 'hapus') {
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
@@ -141,10 +139,6 @@ class _ForumUserState extends State<ForumUser> {
                                 }
                               },
                               itemBuilder: (context) => const [
-                                PopupMenuItem(
-                                  value: 'edit',
-                                  child: Text('Edit'),
-                                ),
                                 PopupMenuItem(
                                   value: 'hapus',
                                   child: Text('Hapus'),
@@ -250,11 +244,6 @@ class _ForumImageSliderState extends State<ForumImageSlider> {
             },
           ),
         ),
-        const SizedBox(height: 8),
-        Obx(() => Text(
-              'Gambar ke-${_currentPage.value + 1} dari ${widget.imageUrls.length}',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            )),
       ],
     );
   }

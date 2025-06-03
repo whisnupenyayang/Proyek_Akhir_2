@@ -78,14 +78,29 @@
 
                     <div class="mb-3">
                         <label for="jenis_kopi" class="form-label">Jenis Kopi</label>
-                        <select id="jenis_kopi" name="jenis_kopi" class="form-select @error('jenis_kopi') is-invalid @enderror" required>
-                            <option value="Arabika" {{ old('jenis_kopi', $pengepul->jenis_kopi) === 'Arabika' ? 'selected' : '' }}>Arabika</option>
-                            <option value="Robusta" {{ old('jenis_kopi', $pengepul->jenis_kopi) === 'Robusta' ? 'selected' : '' }}>Robusta</option>
-                        </select>
+                        <div>
+                            <!-- Menampilkan jenis kopi dalam bentuk teks -->
+                            @php
+                            $jenisKopi = json_decode($pengepul->jenis_kopi, true);
+                            $jenisKopiText = is_array($jenisKopi) ? implode(' dan ', $jenisKopi) : $pengepul->jenis_kopi;
+                            @endphp
+                            <p>{{ $jenisKopiText }}</p>
+
+                            <!-- Jika Anda ingin tetap memberi opsi untuk mengedit -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="arabika" name="jenis_kopi[]" value="Arabika" {{ in_array('Arabika', old('jenis_kopi', $jenisKopi ?? [])) ? 'checked' : '' }} />
+                                <label class="form-check-label" for="arabika">Arabika</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="robusta" name="jenis_kopi[]" value="Robusta" {{ in_array('Robusta', old('jenis_kopi', $jenisKopi ?? [])) ? 'checked' : '' }} />
+                                <label class="form-check-label" for="robusta">Robusta</label>
+                            </div>
+                        </div>
                         @error('jenis_kopi')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
 
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga/kg</label>

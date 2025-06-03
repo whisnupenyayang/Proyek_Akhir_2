@@ -5,6 +5,7 @@ import 'package:markopi/providers/Connection.dart';
 import 'package:get/get.dart';
 import 'package:markopi/controllers/Pengepul_Controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class DetailPengepuldanPetani extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
     setState(() {
       role = prefs.getString('role');
     });
-    
+
     // Fetch data pengepul milik user untuk mengecek kepemilikan
     if (role == 'pengepul') {
       await pengepulC.fetchPengepulByUser();
@@ -44,10 +45,11 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
   void _checkOwnership() {
     final currentDetailId = pengepulC.detailPengepul.value.id;
     final userPengepulList = pengepulC.pengepulByUser;
-    
+
     // Cek apakah detail pengepul yang sedang dilihat ada dalam daftar pengepul milik user
     setState(() {
-      isOwner = userPengepulList.any((pengepul) => pengepul.id == currentDetailId);
+      isOwner =
+          userPengepulList.any((pengepul) => pengepul.id == currentDetailId);
     });
   }
 
@@ -70,7 +72,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Obx(() {
           var item = pengepulC.detailPengepul.value;
-          
+
           // Update ownership check ketika data berubah
           if (role == 'pengepul') {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,7 +88,8 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                 borderRadius: BorderRadius.circular(12),
                 child: item.nama_gambar != null && item.nama_gambar.isNotEmpty
                     ? GestureDetector(
-                        onTap: () => _showFullScreenImage(context, Connection.buildImageUrl(item.url_gambar)),
+                        onTap: () => _showFullScreenImage(
+                            context, Connection.buildImageUrl(item.url_gambar)),
                         child: AspectRatio(
                           aspectRatio: 16 / 9,
                           child: CachedNetworkImage(
@@ -107,7 +110,8 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                         height: 200,
                         width: double.infinity,
                         color: Colors.grey[300],
-                        child: Icon(Icons.store, size: 50, color: Colors.grey[600]),
+                        child: Icon(Icons.store,
+                            size: 50, color: Colors.grey[600]),
                       ),
               ),
               SizedBox(height: 16),
@@ -130,11 +134,12 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
               ),
               SizedBox(height: 8),
               Text(
-                'Rp. ${item.harga}/Kg',
+                'Rp. ${NumberFormat('#,##0', 'id_ID').format(item.harga)}/Kg', // Use 'id_ID' for Indonesian locale
                 style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 20,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
               SizedBox(height: 16),
@@ -151,8 +156,8 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                     children: [
                       Text(
                         'Informasi Detail',
-                        style:
-                            TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 12),
 
@@ -200,8 +205,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                                 ),
                               ),
                             )
-                          : _buildInfoRow(
-                              'Alamat', 'Alamat tidak tersedia'),
+                          : _buildInfoRow('Alamat', 'Alamat tidak tersedia'),
 
                       Divider(),
                       _buildInfoRow('Nomor Telepon',
@@ -239,15 +243,16 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
                   } else if (!phoneNumber.startsWith('62')) {
                     phoneNumber = '62$phoneNumber';
                   }
-                  final Uri whatsappUrl = Uri.parse('https://wa.me/$phoneNumber');
+                  final Uri whatsappUrl =
+                      Uri.parse('https://wa.me/$phoneNumber');
                   try {
                     if (await canLaunchUrl(whatsappUrl)) {
                       await launchUrl(whatsappUrl,
                           mode: LaunchMode.externalApplication);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content:
-                              Text('WhatsApp tidak tersedia di perangkat ini')));
+                          content: Text(
+                              'WhatsApp tidak tersedia di perangkat ini')));
                     }
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -346,7 +351,7 @@ class _DetailPengepuldanPetaniState extends State<DetailPengepuldanPetani> {
 
 class FullScreenImageViewer extends StatelessWidget {
   final String imageUrl;
-  
+
   const FullScreenImageViewer({super.key, required this.imageUrl});
 
   @override

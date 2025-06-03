@@ -6,6 +6,7 @@ import 'package:markopi/controllers/Pengepul_Controller.dart';
 import 'package:markopi/providers/Connection.dart';
 import 'package:markopi/routes/route_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class KopiPage extends StatefulWidget {
   @override
@@ -89,15 +90,16 @@ class _KopiPageState extends State<KopiPage> {
           ),
         ),
       ),
-      floatingActionButton: role == 'pengepul'
-          ? FloatingActionButton(
-              onPressed: () {
-                Get.toNamed(RouteName.pengepul + '/tambah');
-              },
-              backgroundColor: Colors.brown,
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
+      floatingActionButton: role != null && role == 'pengepul'
+    ? FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(RouteName.pengepul + '/tambah');
+        },
+        backgroundColor: Colors.brown,
+        child: const Icon(Icons.add, color: Colors.white),
+      )
+    : null,
+
     );
   }
 
@@ -165,13 +167,13 @@ class _KopiPageState extends State<KopiPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Rp ${item.harga.toString()}/Kg',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
+                  'Rp${NumberFormat('#,##0', 'id_ID').format(item.harga)}/Kg', // Use 'id_ID' for Indonesian locale
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
+                ),
                   const SizedBox(height: 6),
                   Text(
                     '${item.nama_toko} - ${item.jenis_kopi ?? '-'}',

@@ -4,7 +4,6 @@ import 'package:markopi/controllers/Budidaya_Controller.dart';
 import 'package:markopi/controllers/Kegiatan_Controller.dart';
 import 'package:markopi/routes/route_name.dart';
 import './Jenis_Tahap_Budidaya.dart';
-import '';
 
 class TipeBudidaya extends StatefulWidget {
   @override
@@ -12,20 +11,19 @@ class TipeBudidaya extends StatefulWidget {
 }
 
 class _TipeBudidayaState extends State<TipeBudidaya> {
-  final KegiatanController kegiatanC = Get.put(KegiatanController());
-  String? jenis_kopi;
-  String? kegiatan;
+  final KegiatanController kegiatanC = Get.put(KegiatanController()); // Controller untuk mengambil data kegiatan
+  String? jenis_kopi; // Menyimpan jenis kopi
+  String? kegiatan; // Menyimpan kegiatan
 
   @override
   void initState() {
     super.initState();
-
-    jenis_kopi = Get.parameters['jenis_kopi'];
-    kegiatan = Get.parameters['kegiatan'];
+    jenis_kopi = Get.parameters['jenis_kopi']; // Mengambil parameter jenis kopi
+    kegiatan = Get.parameters['kegiatan']; // Mengambil parameter kegiatan
 
     if (jenis_kopi != null && kegiatan != null) {
       print(jenis_kopi);
-      kegiatanC.fetchKegiatan(kegiatan!, jenis_kopi!);
+      kegiatanC.fetchKegiatan(kegiatan!, jenis_kopi!); // Memanggil fungsi untuk mengambil data kegiatan berdasarkan kopi dan kegiatan
     }
   }
 
@@ -33,18 +31,18 @@ class _TipeBudidayaState extends State<TipeBudidaya> {
   Widget build(BuildContext context) {
     if (jenis_kopi == null) {
       return Scaffold(
-        appBar: AppBar(title: Text("Error")),
-        body: Center(child: Text("ID tidak valid")),
+        appBar: AppBar(title: Text("Error")), // Menampilkan halaman error jika jenis kopi tidak ditemukan
+        body: Center(child: Text("ID tidak valid")), // Pesan error
       );
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFF2696D6),
+      backgroundColor: Color(0xFF2696D6), // Warna latar belakang
       appBar: AppBar(
         backgroundColor: Color(0xFF2696D6),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Tombol kembali
           onPressed: () => Get.back(),
         ),
         title: Text(jenis_kopi!, style: TextStyle(color: Colors.white)),
@@ -65,6 +63,7 @@ class _TipeBudidayaState extends State<TipeBudidaya> {
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Obx(() {
+                // Menampilkan data tahapan kegiatan jika tersedia
                 if (kegiatanC.tahapanKegiatanList.isEmpty) {
                   return Center(
                     child: Text(
@@ -81,6 +80,7 @@ class _TipeBudidayaState extends State<TipeBudidaya> {
 
                     return GestureDetector(
                       onTap: () {
+                        // Navigasi ke halaman detail tahap kegiatan
                         Get.toNamed(RouteName.kegiatan +
                             '/$kegiatan/$jenis_kopi/jenistahapankegiatan/${tahapKegiatan.id}');
                       },
@@ -108,13 +108,13 @@ class _TipeBudidayaState extends State<TipeBudidaya> {
                                 color: Color(0xFFE3F2FD),
                                 borderRadius: BorderRadius.circular(100),
                               ),
-                              child: Icon(Icons.park,
+                              child: Icon(Icons.menu_book,
                                   size: 30, color: Color(0xFF142B44)),
                             ),
                             SizedBox(width: 16),
                             Expanded(
                               child: Text(
-                                tahapKegiatan.nama_tahapan,
+                                tahapKegiatan.nama_tahapan, // Menampilkan nama tahap kegiatan
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,

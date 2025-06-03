@@ -24,46 +24,45 @@ class PengepulController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Let Laravel handle validation errors automatically
-    $validatedData = $request->validate([
-        'nama_toko' => 'required|string|max:100',
-        'alamat' => 'required|string|max:255',
-        'jenis_kopi' => 'required|string|max:100',
-        'harga' => 'required|numeric|min:0',
-        'nomor_telepon' => 'required|string|max:20',
-        'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-    ]);
-
-    try {
-        $namaGambar = null;
-        $urlGambar = null;
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $namaGambar = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images'), $namaGambar);
-            $urlGambar = 'images/' . $namaGambar;
-        }
-
-        $pengepul = Pengepul::create([
-            'nama_toko' => $validatedData['nama_toko'],
-            'alamat' => $validatedData['alamat'],
-            'jenis_kopi' => $validatedData['jenis_kopi'],
-            'harga' => $validatedData['harga'],
-            'nomor_telepon' => $validatedData['nomor_telepon'],
-            'nama_gambar' => $namaGambar,
-            'url_gambar' => $urlGambar,
-            'user_id' => 2,
+    {
+        // Let Laravel handle validation errors automatically
+        $validatedData = $request->validate([
+            'nama_toko' => 'required|string|max:100',
+            'alamat' => 'required|string|max:255',
+            'jenis_kopi' => 'required|array', // Memastikan jenis kopi berupa array
+            'harga' => 'required|numeric|min:0',
+            'nomor_telepon' => 'required|string|max:20',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ]);
 
-        return redirect()->route('admin.pengepul')->with('success', 'Informasi Pengepul berhasil ditambahkan');
-    } catch (Exception $e) {
-        Log::error('Error storing pengepul: ' . $e->getMessage());
-        return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
+        try {
+            $namaGambar = null;
+            $urlGambar = null;
+            if ($request->hasFile('gambar')) {
+                $file = $request->file('gambar');
+                $namaGambar = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $namaGambar);
+                $urlGambar = 'images/' . $namaGambar;
+            }
+
+            // Menyimpan data pengepul, jenis kopi disimpan dalam format JSON
+            $pengepul = Pengepul::create([
+                'nama_toko' => $validatedData['nama_toko'],
+                'alamat' => $validatedData['alamat'],
+                'jenis_kopi' => json_encode($validatedData['jenis_kopi']), // Menyimpan jenis kopi dalam format JSON
+                'harga' => $validatedData['harga'],
+                'nomor_telepon' => $validatedData['nomor_telepon'],
+                'nama_gambar' => $namaGambar,
+                'url_gambar' => $urlGambar,
+                'user_id' => 2, // ID user, ganti sesuai dengan user yang relevan
+            ]);
+
+            return redirect()->route('admin.pengepul')->with('success', 'Informasi Pengepul berhasil ditambahkan');
+        } catch (Exception $e) {
+            Log::error('Error storing pengepul: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
+        }
     }
-}
-
-
 
     public function edit($id)
     {
@@ -73,61 +72,60 @@ class PengepulController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    try {
-        $validatedData = $request->validate([
-            'nama_toko' => 'required|string|max:100',
-            'alamat' => 'required|string|max:255',
-            'jenis_kopi' => 'required|string|max:100',
-            'harga' => 'required|numeric|min:0',
-            'nomor_telepon' => 'required|string|max:20',
-            'gambar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
-        ]);
+    {
+        try {
+            $validatedData = $request->validate([
+                'nama_toko' => 'required|string|max:100',
+                'alamat' => 'required|string|max:255',
+                'jenis_kopi' => 'required|array', // Memastikan jenis kopi berupa array
+                'harga' => 'required|numeric|min:0',
+                'nomor_telepon' => 'required|string|max:20',
+                'gambar' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+            ]);
 
-        $pengepul = Pengepul::findOrFail($id);
+            $pengepul = Pengepul::findOrFail($id);
 
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($pengepul->url_gambar && file_exists(public_path($pengepul->url_gambar))) {
-                unlink(public_path($pengepul->url_gambar));
+            if ($request->hasFile('gambar')) {
+                // Hapus gambar lama jika ada
+                if ($pengepul->url_gambar && file_exists(public_path($pengepul->url_gambar))) {
+                    unlink(public_path($pengepul->url_gambar));
+                }
+
+                $file = $request->file('gambar');
+                $filename = time() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images'), $filename);
+                $pengepul->nama_gambar = $filename;
+                $pengepul->url_gambar = 'images/' . $filename;
             }
 
-            $file = $request->file('gambar');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images'), $filename);
-            $pengepul->nama_gambar = $filename;
-            $pengepul->url_gambar = 'images/' . $filename;
+            // Update data pengepul, menyimpan jenis kopi dalam format JSON
+            $pengepul->nama_toko = $validatedData['nama_toko'];
+            $pengepul->alamat = $validatedData['alamat'];
+            $pengepul->jenis_kopi = json_encode($validatedData['jenis_kopi']);
+            $pengepul->harga = $validatedData['harga'];
+            $pengepul->nomor_telepon = $validatedData['nomor_telepon'];
+            $pengepul->save();
+
+            return redirect()->route('admin.pengepul')->with('success', 'Data Pengepul berhasil diubah');
+        } catch (Exception $e) {
+            Log::error('Error updating pengepul: ' . $e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
-
-        $pengepul->nama_toko = $validatedData['nama_toko'];
-        $pengepul->alamat = $validatedData['alamat'];
-        $pengepul->jenis_kopi = $validatedData['jenis_kopi'];
-        $pengepul->harga = $validatedData['harga'];
-        $pengepul->nomor_telepon = $validatedData['nomor_telepon'];
-        $pengepul->save();
-
-        return redirect()->route('admin.pengepul')->with('success', 'Data Pengepul berhasil diubah');
-    } catch (Exception $e) {
-        Log::error('Error updating pengepul: ' . $e->getMessage());
-        return redirect()->back()->with('error', $e->getMessage())->withInput();
     }
-}
-
 
     public function destroy($id)
-{
-    $pengepul = Pengepul::findOrFail($id);
+    {
+        $pengepul = Pengepul::findOrFail($id);
 
-    // Hapus gambar jika ada
-    if ($pengepul->url_gambar && file_exists(public_path($pengepul->url_gambar))) {
-        unlink(public_path($pengepul->url_gambar));
+        // Hapus gambar jika ada
+        if ($pengepul->url_gambar && file_exists(public_path($pengepul->url_gambar))) {
+            unlink(public_path($pengepul->url_gambar));
+        }
+
+        $pengepul->delete();
+
+        return redirect()->route('admin.pengepul')->with('success', 'Data pengepul berhasil dihapus.');
     }
-
-    $pengepul->delete();
-
-    return redirect()->route('admin.pengepul')->with('success', 'Data pengepul berhasil dihapus.');
-}
-
 
     public function show($id)
     {

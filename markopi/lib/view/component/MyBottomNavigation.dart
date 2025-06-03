@@ -14,24 +14,25 @@ class MyBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavController controller = Get.put(BottomNavController());
+    final BottomNavController controller =
+        Get.put(BottomNavController()); // Mengakses BottomNavController
 
     return Scaffold(
       body: Obx(() {
         // Ganti tampilan berdasarkan index yang dipilih
         switch (controller.selectedIndex.value) {
           case 0:
-            return Beranda();  // Pastikan Beranda tampil sebagai default
+            return Beranda(); // Halaman pertama (Beranda)
           case 1:
-            return ListForum();
+            return ListForum(); // Halaman Forum
           case 2:
-            return KopiPage();
+            return KopiPage(); // Halaman Pengepul (Kopi)
           case 3:
-            return ListArtikel();
+            return ListArtikel(); // Halaman Artikel
           case 4:
-            return ProfileView();
+            return ProfileView(); // Halaman Profil
           default:
-            return Beranda();  // Pastikan fallback ke Beranda
+            return Beranda(); // Fallback ke Beranda jika index tidak ditemukan
         }
       }),
       bottomNavigationBar: Obx(
@@ -62,19 +63,32 @@ class MyBottomNavigationBar extends StatelessWidget {
             ),
           ],
           currentIndex: controller.selectedIndex.value,
-          selectedItemColor: const Color(0xFF297CBB),
+          selectedItemColor: const Color(0xFF297CBB), // Warna saat item dipilih
           showSelectedLabels: true,
           showUnselectedLabels: true,
           onTap: (index) async {
-            final token = await TokenStorage.getToken();
-            if (index == 0) {
-              // Selalu izinkan akses ke Beranda
+            final token = await TokenStorage.getToken(); // Cek apakah token ada
+            if (index == 0 || index == 1 || index == 2 || index == 3) {
+              // Akses Beranda, Forum, Pengepul, dan Artikel selalu diizinkan, tanpa login
               controller.onItemTapped(index);
-            } else if (token == null) {
-              // Kalau bukan index 0 dan token null, arahkan ke login
+            } else if (index == 4 && token == null) {
+              // Jika token tidak ada dan pengguna mencoba mengakses Profil
+              Get.snackbar(
+                "Anda belum login", // Judul Snackbar
+                "Silakan login untuk mengakses halaman profil", // Pesan Snackbar
+                snackPosition: SnackPosition.TOP, // Posisi di atas layar
+                backgroundColor: Colors
+                    .blue, // Ganti dengan warna sesuai dengan tema aplikasi Anda
+                colorText: Colors.white, // Warna teks putih
+                borderRadius: 8, // Menambahkan radius pada sudut Snackbar
+                margin: EdgeInsets.all(12), // Menambahkan margin
+                padding: EdgeInsets.symmetric(
+                    vertical: 12, horizontal: 16), // Menambahkan padding
+              );
+              // Arahkan ke halaman login setelah menunjukkan snackbar
               Get.toNamed(RouteName.login);
             } else {
-              // Kalau token ada, izinkan akses
+              // Jika token ada, izinkan akses halaman lainnya
               controller.onItemTapped(index);
             }
           },
@@ -83,4 +97,3 @@ class MyBottomNavigationBar extends StatelessWidget {
     );
   }
 }
-

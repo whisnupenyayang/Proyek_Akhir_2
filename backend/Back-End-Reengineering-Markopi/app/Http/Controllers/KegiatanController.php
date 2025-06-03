@@ -183,6 +183,7 @@ class KegiatanController extends Controller
         $tahapan = TahapanKegiatan::firstOrCreate([
             'nama_tahapan' => $namaTahapan,
             'kegiatan' => 'panen',
+            'jenis_kopi' => $request->jenis_kopi,
         ]);
 
         $data = [

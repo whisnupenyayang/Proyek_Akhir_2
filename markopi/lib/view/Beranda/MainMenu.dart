@@ -55,32 +55,48 @@ class _MainMenuState extends State<MainMenu> {
   List<bool> isPressed = List.generate(6, (_) => false);
 
   // Fungsi untuk menangani ketika menu diklik.
-  void _handleTap(int index) {
-    setState(() {
-      print('Menu yang dipilih: ${menuList[index]}'); // Menampilkan menu yang dipilih.
+  void _handleTap(int index) async {
+  setState(() {
+    print('Menu yang dipilih: ${menuList[index]}'); // Menampilkan menu yang dipilih.
 
-      // Menentukan navigasi berdasarkan menu yang dipilih.
-      if (menuList[index] == 'Toko_Kopi') {
-        print('Navigasi ke Toko Kopi');
-        Get.toNamed(RouteName.tokoKopi); // Navigasi ke halaman Toko Kopi.
-      } else if (menuList[index] == 'Resep_Kopi') {
-        print('Navigasi ke Resep Kopi');
-        Get.toNamed(RouteName.resepKopi); // Navigasi ke halaman Resep Kopi.
-      } else if (menuList[index] == 'Laporan') {
-        print('Navigasi ke Laporan');
-        // Jika token ada, menuju ke halaman Laporan, jika tidak, ke halaman login.
-        if (token != null) {
-          Get.toNamed(RouteName.laporan);
-        } else {
-          Get.offAllNamed(RouteName.login);
-        }
+    // Menentukan navigasi berdasarkan menu yang dipilih
+    if (menuList[index] == 'Toko_Kopi') {
+      print('Navigasi ke Toko Kopi');
+      Get.toNamed(RouteName.tokoKopi); // Navigasi ke halaman Toko Kopi
+    } else if (menuList[index] == 'Resep_Kopi') {
+      print('Navigasi ke Resep Kopi');
+      Get.toNamed(RouteName.resepKopi); // Navigasi ke halaman Resep Kopi
+    } else if (menuList[index] == 'Laporan') {
+      print('Navigasi ke Laporan');
+      if (token != null) {
+        // Jika token ada, menuju ke halaman Laporan
+        Get.toNamed(RouteName.laporan);
       } else {
-        print('Navigasi ke kegiatan: ${RouteName.kegiatan}/${menuList[index]}');
-        // Navigasi ke halaman kegiatan berdasarkan pilihan menu.
-        Get.toNamed('${RouteName.kegiatan}/${menuList[index]}');
+        // Jika token tidak ada, arahkan ke halaman login terlebih dahulu
+        Get.offAllNamed(RouteName.login);
+
+        // Tampilkan Snackbar setelah beberapa detik
+        Future.delayed(Duration(seconds: 1), () {
+          Get.snackbar(
+            "Anda belum login", // Judul Snackbar
+            "Silakan login untuk mengakses halaman laporan", // Pesan Snackbar
+            snackPosition: SnackPosition.TOP, // Posisi di atas layar
+            backgroundColor: Colors.lightBlueAccent[700]!, // Warna latar belakang abu-abu
+            colorText: Colors.white, // Warna teks putih
+            borderRadius: 8, // Menambahkan radius pada sudut Snackbar
+            margin: EdgeInsets.all(12), // Menambahkan margin
+            padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16), // Menambahkan padding
+          );
+        });
       }
-    });
-  }
+    } else {
+      // Navigasi ke halaman kegiatan berdasarkan pilihan menu
+      print('Navigasi ke kegiatan: ${RouteName.kegiatan}/${menuList[index]}');
+      Get.toNamed('${RouteName.kegiatan}/${menuList[index]}');
+    }
+  });
+}
+
 
   // Fungsi untuk membangun item menu.
   Widget buildMenuItem(int index) {

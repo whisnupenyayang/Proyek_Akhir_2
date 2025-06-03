@@ -28,12 +28,10 @@ class PengepulController extends GetxController {
 
   // Ambil data pengepul milik pengguna
   Future<void> fetchPengepulByUser() async {
-    final String? token = await TokenStorage.getToken();
-    if (token == null) {
-      Get.snackbar('Error', 'Anda belum login');
-      return;
-    }
-
+  final String? token = await TokenStorage.getToken();
+  
+  // Hanya jika token ada, kita coba fetch pengepul milik user
+  if (token != null) {
     final response = await pengepulProvider.getDataPengepulByid(token);
 
     if (response.statusCode == 200) {
@@ -42,7 +40,11 @@ class PengepulController extends GetxController {
     } else {
       Get.snackbar('Tidak dapat mengambil data pengepul', 'Cek koneksi internet anda');
     }
+  } else {
+    // Jika token tidak ada, kita hanya menampilkan pengepul umum tanpa error
+    pengepulByUser.clear();  // Clear pengepul milik pengguna jika token tidak ada
   }
+}
 
   // Ambil detail pengepul
   Future<void> fetcPengepulDetail(int id) async {

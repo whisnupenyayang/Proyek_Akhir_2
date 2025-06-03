@@ -8,6 +8,8 @@
         border: none;
         padding: 5px 10px;
         cursor: pointer;
+        width: 100%; /* Tombol mengambil lebar penuh */
+        margin: 5px 0; /* Tambahkan margin vertikal */
     }
 
     .accept-button {
@@ -16,6 +18,8 @@
         border: none;
         padding: 5px 10px;
         cursor: pointer;
+        width: 100%; /* Tombol mengambil lebar penuh */
+        margin: 5px 0; /* Tambahkan margin vertikal */
     }
 
     .card-user {
@@ -25,6 +29,7 @@
         margin-bottom: 20px;
         text-align: center;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Pastikan card mengambil lebar penuh */
     }
 
     .card-user img {
@@ -43,6 +48,13 @@
 
     .d-none {
         display: none !important;
+    }
+
+    @media (max-width: 768px) {
+        .col-6 {
+            flex: 0 0 50%; /* Dua card dalam satu baris */
+            max-width: 50%;
+        }
     }
 </style>
 
@@ -81,14 +93,14 @@
                             </div>
 
                             <div class="mt-2">
-                                <form action="{{ route('pengajuan.accept', ['id' => $item->id_pengajuans]) }}" method="POST" style="display: inline-block;">
+                                <form action="{{ route('pengajuan.accept', ['id' => $item->id_pengajuans]) }}" method="POST" style="display: block; margin-bottom: 5px;">
                                     @csrf
                                     <button type="submit" class="accept-button">
                                         <i class="fas fa-check"></i> Terima
                                     </button>
                                 </form>
 
-                                <form action="{{ route('pengajuan.reject', ['id' => $item->id_pengajuans]) }}" method="POST" style="display: inline-block;">
+                                <form action="{{ route('pengajuan.reject', ['id' => $item->id_pengajuans]) }}" method="POST" style="display: block;">
                                     @csrf
                                     <button type="submit" class="reject-button">
                                         <i class="fas fa-times"></i> Tolak

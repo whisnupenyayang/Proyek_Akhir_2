@@ -37,7 +37,7 @@ class AuthController extends Controller
                 return redirect()->route('dashboard.admin');
             }
         } else {
-              return redirect()->back()->with('error', 'Credentials tidak valid');
+              return redirect()->back()->with('error', 'Username atau Password salah');
         }
     }
 

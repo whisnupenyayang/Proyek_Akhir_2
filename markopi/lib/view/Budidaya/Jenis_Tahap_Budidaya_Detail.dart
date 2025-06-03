@@ -19,31 +19,27 @@ class _JenisTahapBudidayDetailViewState
   final BudidayaController budidayaC = Get.put(BudidayaController());
   final KegiatanController kegiatanC = Get.put(KegiatanController());
 
-  int? id;
+  int? id; // Menyimpan ID tahap budidaya
 
   @override
   void initState() {
     super.initState();
     try {
-      print('owkw');
-      id = int.tryParse(Get.parameters['id'] ?? '');
+      id = int.tryParse(Get.parameters['id'] ?? ''); // Mengambil ID dari parameter URL
     } catch (e) {
-      print('owkw');
-      id = null;
+      id = null; // Jika ID tidak valid, set ID ke null
     }
 
     if (id != null) {
-      // budidayaC.jenisTahapBudidayaDetail.value =
-      //     budidayaC.jenisTahapBudidayaDetail.value = JenisTahapBudidaya.empty();
-      kegiatanC.jenisTahapKegiatanDetail.value = JenisTahapKegiatan.empty();
-      kegiatanC.fetchjenisTahapanKegiatanDetail(id!);
-      // budidayaC.fetchJenisTahapBudidayaDetail(id!);
+      kegiatanC.jenisTahapKegiatanDetail.value = JenisTahapKegiatan.empty(); // Inisialisasi data kosong
+      kegiatanC.fetchjenisTahapanKegiatanDetail(id!); // Mengambil detail tahap kegiatan berdasarkan ID
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (id == null) {
+      // Menampilkan error jika ID tidak valid
       return Scaffold(
         appBar: AppBar(title: Text("Error")),
         body: Center(child: Text("ID tidak valid")),
@@ -52,12 +48,12 @@ class _JenisTahapBudidayDetailViewState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Jenis Tahap Budidaya"),
+        title: Text("Jenis Tahap Budidaya"), // Judul halaman
       ),
       body: Obx(() {
         final item = kegiatanC.jenisTahapKegiatanDetail.value;
 
-        // loading state
+        // Menampilkan indikator loading jika data belum tersedia
         if (item.id == 0) {
           return Center(child: CircularProgressIndicator());
         }
@@ -71,26 +67,28 @@ class _JenisTahapBudidayDetailViewState
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  item.judul,
+                  item.judul, // Menampilkan judul tahap kegiatan
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 21),
+                // Menampilkan gambar menggunakan CachedNetworkImage
                 Container(
                   color: Colors.grey,
                   child: CachedNetworkImage(
                     imageUrl:
-                        'https://markopi.d4trpl-itdel.id/storage/${item.url_gambar}',
+                        'https://markopi.d4trpl-itdel.id/storage/${item.url_gambar}', // URL gambar
                     placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                        Center(child: CircularProgressIndicator()), // Menampilkan loading saat gambar dimuat
+                    errorWidget: (context, url, error) => Icon(Icons.error), // Menampilkan ikon error jika gagal memuat gambar
                   ),
                 ),
                 SizedBox(height: 14),
+                // Menampilkan deskripsi tahap kegiatan
                 Text(
-                  item.deskripsi ?? '-',
+                  item.deskripsi ?? '-', // Menampilkan deskripsi atau tanda "-" jika tidak ada deskripsi
                   style: TextStyle(fontSize: 14),
                 ),
               ],

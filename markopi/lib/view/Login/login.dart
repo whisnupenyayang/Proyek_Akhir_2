@@ -106,12 +106,7 @@ class _LoginViewState extends State<LoginView> {
               child:
                   const Text("Daftar", style: TextStyle(color: Colors.white)),
             ),
-            const SizedBox(height: 16),
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.grey),
-              onPressed: () => Get.toNamed(RouteName.forgotPassword),
-              child: Text("Lupa Password?"),
-            ),
+            
           ],
         ),
       ),

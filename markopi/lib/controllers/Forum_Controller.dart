@@ -201,7 +201,7 @@ class ForumController extends GetxController {
     final String? token = await TokenStorage.getToken();
     try {
       if (token == null) {
-        Get.snackbar('Error', 'Token tidak tersedia');
+        Get.snackbar('Error', 'Anda belum login');
         return;
       }
       final response = await forumProvider.postForum(

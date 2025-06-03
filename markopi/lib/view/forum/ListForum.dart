@@ -71,8 +71,20 @@ class _ListForumState extends State<ListForum> {
                     if (forumController.forum.isEmpty &&
                         !forumController.isLoading.value) {
                       debugPrint('ListForum: No forums available to display');
-                      return const Center(
-                        child: Text('Tidak ada forum tersedia'),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Tidak ada forum tersedia'),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                forumController.refreshForum();
+                              },
+                              child: const Text('Refresh'),
+                            ),
+                          ],
+                        ),
                       );
                     }
 
