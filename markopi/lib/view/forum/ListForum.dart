@@ -150,7 +150,7 @@ class _ListForumState extends State<ListForum> {
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
-                                                  color: Colors.blue,
+                                                  color: Color(0xFF2196F3),
                                                 ),
                                               ),
                                               Text(

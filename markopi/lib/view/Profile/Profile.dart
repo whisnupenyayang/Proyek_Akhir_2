@@ -58,7 +58,7 @@ class _ProfileViewState extends State<ProfileView> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Profil'),
         centerTitle: true,
       ),
       body: Container(

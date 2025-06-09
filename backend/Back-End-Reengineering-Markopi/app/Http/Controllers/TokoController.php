@@ -70,36 +70,44 @@ class TokoController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Validasi input
         $request->validate([
             'nama_toko' => 'required|string|max:255',
-            'lokasi' => 'required|url',
+            'lokasi' => 'required|string|max:255', 
             'jam_operasional' => 'required|string|max:255',
-            'foto_toko' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto_toko' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
         ]);
 
+        // Temukan toko berdasarkan ID
         $toko = Toko::findOrFail($id);
 
+        // Update data toko
         $toko->nama_toko = $request->nama_toko;
         $toko->lokasi = $request->lokasi;
         $toko->jam_operasional = $request->jam_operasional;
 
+        // Proses foto jika ada file baru
         if ($request->hasFile('foto_toko')) {
-            // Simpan gambar baru dan hapus yang lama jika ada
+            // Hapus gambar lama jika ada
             if ($toko->foto_toko && file_exists(public_path('images/' . $toko->foto_toko))) {
                 unlink(public_path('images/' . $toko->foto_toko));
             }
 
+            // Simpan gambar baru
             $file = $request->file('foto_toko');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images'), $filename);
 
+            // Update nama file gambar
             $toko->foto_toko = $filename;
         }
 
+        // Simpan perubahan ke database
         $toko->save();
 
         return redirect()->route('toko.detail', $toko->id)->with('success', 'Data toko berhasil diperbarui.');
     }
+
 
 
     // Method to delete a store

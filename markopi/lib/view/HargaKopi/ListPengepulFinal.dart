@@ -48,6 +48,8 @@ class _KopiPageState extends State<KopiPage> {
       appBar: AppBar(
         title: Text(isMyShop ? 'Toko Milik Saya' : 'Semua Toko Pengepul'),
         centerTitle: true,
+        backgroundColor: Colors.blue.shade500, // Update to Colors.blue.shade500
+        foregroundColor: Colors.white,
       ),
       body: RefreshIndicator(
         onRefresh: _refreshData,
@@ -69,7 +71,7 @@ class _KopiPageState extends State<KopiPage> {
                     child: Text(
                       'Toko Milik Saya',
                       style: TextStyle(
-                        color: isMyShop ? Colors.brown : Colors.grey,
+                        color: isMyShop ? Colors.blue.shade500 : Colors.grey, // Update to Colors.blue.shade500
                       ),
                     ),
                   ),
@@ -78,7 +80,7 @@ class _KopiPageState extends State<KopiPage> {
                     child: Text(
                       'Semua Toko',
                       style: TextStyle(
-                        color: isMyShop ? Colors.grey : Colors.brown,
+                        color: isMyShop ? Colors.grey : Colors.blue.shade500, // Update to Colors.blue.shade500
                       ),
                     ),
                   ),
@@ -91,15 +93,14 @@ class _KopiPageState extends State<KopiPage> {
         ),
       ),
       floatingActionButton: role != null && role == 'pengepul'
-    ? FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(RouteName.pengepul + '/tambah');
-        },
-        backgroundColor: Colors.brown,
-        child: const Icon(Icons.add, color: Colors.white),
-      )
-    : null,
-
+          ? FloatingActionButton(
+              onPressed: () {
+                Get.toNamed(RouteName.pengepul + '/tambah');
+              },
+              backgroundColor: Colors.blue.shade500, // Update to Colors.blue.shade500
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 
@@ -154,7 +155,7 @@ class _KopiPageState extends State<KopiPage> {
                   imageUrl: Connection.buildImageUrl(item.url_gambar),
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator(color: Colors.brown)),
+                      const Center(child: CircularProgressIndicator(color: Color(0xFF2196F3))),
                   errorWidget: (context, url, error) =>
                       const Icon(Icons.error, color: Colors.red),
                 ),
@@ -167,13 +168,13 @@ class _KopiPageState extends State<KopiPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                  'Rp${NumberFormat('#,##0', 'id_ID').format(item.harga)}/Kg', // Use 'id_ID' for Indonesian locale
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    'Rp${NumberFormat('#,##0', 'id_ID').format(item.harga)}/Kg',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
                   ),
-                ),
                   const SizedBox(height: 6),
                   Text(
                     '${item.nama_toko} - ${item.jenis_kopi ?? '-'}',
