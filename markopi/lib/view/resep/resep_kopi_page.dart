@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:markopi/service/resep_service.dart';
 import 'package:markopi/models/resep.dart';
-import 'dart:io'; // Tambahan untuk menangani error koneksi
+import 'dart:io';
+import 'package:markopi/view/resep/ResepKopiPage.dart';
+import 'package:get/get.dart';
 
 class ResepKopiPage extends StatefulWidget {
   const ResepKopiPage({super.key});
@@ -36,7 +38,7 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
       if (reseps != null && mounted) {
         setState(() {
           _allReseps = reseps;
-          _filteredReseps = reseps;  // Set initial filtered list
+          _filteredReseps = reseps; // Set initial filtered list
         });
       }
     } catch (e) {
@@ -61,7 +63,7 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
     if (_searchQuery.isNotEmpty) {
       tempList = tempList.where((resep) {
         return resep.namaResep.toLowerCase().contains(_searchQuery) ||
-               resep.deskripsiResep.toLowerCase().contains(_searchQuery);
+            resep.deskripsiResep.toLowerCase().contains(_searchQuery);
       }).toList();
     }
 
@@ -72,7 +74,7 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
 
   Widget _buildSearchBar() {
     return Container(
-      margin: const EdgeInsets.all(12),  // Mengurangi margin untuk kompak
+      margin: const EdgeInsets.all(12), // Mengurangi margin untuk kompak
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -99,7 +101,8 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );
@@ -150,7 +153,8 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
       appBar: AppBar(
         title: const Text('Resep Kopi'),
         centerTitle: true, // Menempatkan teks di tengah
-        backgroundColor: const Color(0xFF2196F3), // Mengubah warna app bar menjadi biru
+        backgroundColor:
+            const Color(0xFF2196F3), // Mengubah warna app bar menjadi biru
         foregroundColor: Colors.white, // Warna teks putih
       ),
       body: Column(
@@ -165,12 +169,14 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
                     : RefreshIndicator(
                         onRefresh: () => _loadInitialData(),
                         child: ListView.builder(
-                          padding: const EdgeInsets.all(12), // Mengurangi padding pada list
+                          padding: const EdgeInsets.all(
+                              12), // Mengurangi padding pada list
                           itemCount: _filteredReseps.length,
                           itemBuilder: (context, index) {
                             final resep = _filteredReseps[index];
                             return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 20),
                               elevation: 5,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -178,44 +184,56 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(16),
                                 onTap: () {
-                                  // Navigasi ke halaman detail resep
+                                  Get.to(() => ResepDetailPage(resep: resep));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       resep.gambarResep.isNotEmpty
                                           ? ClipRRect(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               child: Image.network(
                                                 resep.gambarResep,
                                                 width: 120,
                                                 height: 120,
                                                 fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  return const Icon(Icons.broken_image,
-                                                      size: 40, color: Colors.grey);
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                      Icons.broken_image,
+                                                      size: 40,
+                                                      color: Colors.grey);
                                                 },
                                               ),
                                             )
-                                          : const Icon(Icons.image_not_supported,
-                                              size: 100, color: Colors.grey),
+                                          : const Icon(
+                                              Icons.image_not_supported,
+                                              size: 100,
+                                              color: Colors.grey),
                                       const SizedBox(width: 20),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             RichText(
                                               text: TextSpan(
                                                 style: const TextStyle(
-                                                    fontSize: 17, color: Colors.black),
+                                                    fontSize: 17,
+                                                    color: Colors.black),
                                                 children: [
                                                   const TextSpan(
                                                     text: 'Nama Resep: ',
-                                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  TextSpan(text: resep.namaResep),
+                                                  TextSpan(
+                                                      text: resep.namaResep),
                                                 ],
                                               ),
                                             ),
@@ -223,15 +241,23 @@ class _ResepKopiPageState extends State<ResepKopiPage> {
                                             RichText(
                                               text: TextSpan(
                                                 style: const TextStyle(
-                                                    fontSize: 15, color: Colors.black87),
+                                                    fontSize: 15,
+                                                    color: Colors.black87),
                                                 children: [
                                                   const TextSpan(
                                                     text: 'Deskripsi Resep: ',
-                                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                   TextSpan(
-                                                    text: resep.deskripsiResep.length > 50
-                                                        ? resep.deskripsiResep.substring(0, 50) + '...'
+                                                    text: resep.deskripsiResep
+                                                                .length >
+                                                            50
+                                                        ? resep.deskripsiResep
+                                                                .substring(
+                                                                    0, 50) +
+                                                            '...'
                                                         : resep.deskripsiResep,
                                                   ),
                                                 ],
